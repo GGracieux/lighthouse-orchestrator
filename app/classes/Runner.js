@@ -16,9 +16,10 @@ class Runner {
 
         this.lighthouse = new Lighthouse()
 
-        let webserver = new Webserver()
-        webserver.start()
-        
+        if (global.conf.webserver.enabled) {
+            let webserver = new Webserver()
+            webserver.start(global.conf.webserver.port)
+        }
     }
 
     //--- Runs a lighthouse test ------------------------------

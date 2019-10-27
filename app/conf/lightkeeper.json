@@ -14,5 +14,8 @@
             "audits.max-potential-fid.numericValue"
         ]
     },
-    "web-server":true
+    "webserver":{
+        "enabled": true,
+        "port": 80
+    }
 }
