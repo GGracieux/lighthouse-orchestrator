@@ -6,7 +6,7 @@ echo ">>> CHECKING DIRECTORIES RIGHTS"
 echo "/lightkeeper/data/tmp"
 mkdir -p /lightkeeper/data/tmp
 chown chrome:chrome /lightkeeper/data/tmp
-chmod 755 /lightkeeper/tmp
+chmod 755 /lightkeeper/data/tmp
 
 echo "/lightkeeper/data/logs"
 mkdir -p /lightkeeper/data/logs

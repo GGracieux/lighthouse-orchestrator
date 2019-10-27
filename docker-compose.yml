@@ -5,3 +5,5 @@ services:
     container_name: lightkeeper
     volumes:
       - ./app/data:/lightkeeper/data:rw
+    ports:
+      - 80:80

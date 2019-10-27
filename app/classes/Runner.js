@@ -1,16 +1,24 @@
 const fs = require('fs');
 const QueueManager = require('./QueueManager.js')
 const Lighthouse = require('./Lighthouse.js')
+const Webserver = require('./Webserver.js')
 const mkdirp = require('mkdirp');
+const slugify = require('slugify')
 
 class Runner {
 
     //--- Initialisation ------------------------------
     constructor() {
+
         this.qm = new QueueManager()
-        this.lighthouse = new Lighthouse()
         this.qm.emptyQueue()
         this.qm.startEnqueuer()
+
+        this.lighthouse = new Lighthouse()
+
+        let webserver = new Webserver()
+        webserver.start()
+        
     }
 
     //--- Runs a lighthouse test ------------------------------
@@ -111,7 +119,7 @@ class Runner {
         // Moving reports
         let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
         global.conf["reports"]["formats"].forEach(format => {
-            fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobId + '.report.' + format)
+            fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobId + '-' + slugify(jobResult.conf.url).substring(0, 100) + '.' + format)
         });
 
         // Removing json report
