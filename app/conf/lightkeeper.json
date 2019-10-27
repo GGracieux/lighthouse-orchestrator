@@ -1,5 +1,9 @@
 {
     "queue-check-delay" : "5000",
+    "output": {
+        "reports": true,
+        "logs": true
+    },
     "reports":{
         "formats": ["html", "json", "csv"],
         "web-access": true
