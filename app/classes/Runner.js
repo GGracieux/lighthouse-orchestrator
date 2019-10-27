@@ -23,7 +23,12 @@ class Runner {
                 result => {
     
                     // Process job result
-                    this.handleJobResult(result)
+                    this.processJobResult(result)
+
+                    // Remove job from queue
+                    let action = 'Ending'
+                    logger.info('Job ' + result.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + result.conf.url)
+                    this.qm.removeJob(result.jobId)
     
                     // Launch next job
                     this.runQueue()
@@ -42,21 +47,36 @@ class Runner {
     }
 
     //--- Process lighthouse job results ------------------------------
-    handleJobResult(jobResult) {
+    processJobResult(jobResult) {
 
-        let action = 'Extracting';
+        // Log
+        let action = 'Processing';
         logger.info('Job ' + jobResult.jobId + ' - ' + action.padEnd(10,' ') +  ' : ' + jobResult.conf.url)
 
+        // Log des résultats
+        if (global.conf.logs.fields.length > 0) {
+            this.logResults(jobResult) 
+        }
+
+        // Archivage des rapports
+        if (global.conf.reports.formats.length > 0) {
+            this.archiveReports(jobResult)
+        }
+        
+    }
+
+    //--- Extract results from json reports and log to file ------------------------------
+    logResults(jobResult) {
+    
         // reads report.json
         let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
         let line = jobResult.jobId
-        global.conf.logs["report-fields"].forEach(key => {
+        global.conf.logs.fields.forEach(key => {
             let keyparts = key.split('.')
             let item = report
-            var BreakException = {};
             try {
                 keyparts.forEach(keypart => {
                     if (item.hasOwnProperty(keypart)) {
@@ -70,7 +90,6 @@ class Runner {
             }
             line += ";" + item
         })
-        console.log(line)
 
         // writing result to log
         fs.appendFile(__dirname + '/../data/logs/results.log', line+"\n", function(err) {
@@ -78,6 +97,10 @@ class Runner {
                 return console.log(err);
             }
         });
+    }
+
+    //--- Archive lighthouse reports to final directory ------------------------------
+    archiveReports(jobResult) {
 
         // Creating directory structure for report storage
         let d = new Date()
@@ -86,6 +109,7 @@ class Runner {
         mkdirp.sync(archiveDir)
 
         // Moving reports
+        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
         global.conf["reports"]["formats"].forEach(format => {
             fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobId + '.report.' + format)
         });
@@ -94,14 +118,6 @@ class Runner {
         if (!global.conf["reports"]["formats"].includes('json')) {
             fs.unlinkSync(reportPath + '.json')
         }
-
-        // Deleting .run file
-        let runFilePath = __dirname + '/../data/tmp/' + jobResult.jobId + '.run.json'
-        fs.unlinkSync(runFilePath)
-
-        // Log
-        action = 'End'
-        logger.info('Job ' + jobResult.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + jobResult.conf.url)
     }
 
 }

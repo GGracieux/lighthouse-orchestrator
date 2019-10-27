@@ -72,6 +72,12 @@ class QueueManager {
         return runs
     }
 
+    //--- Remove job from queue -------------------------------------
+    removeJob(jobId) {
+        let runFilePath = __dirname + '/../data/tmp/' + jobId + '.run.json'
+        fs.unlinkSync(runFilePath)
+    }
+
     //--- Remove everything from queue ------------------------------
     emptyQueue() {
         let files = fs.readdirSync(__dirname + '/../data/tmp/')

@@ -3,7 +3,7 @@
         "formats": ["html", "json", "csv"]
     },
     "logs":{
-        "report-fields":[
+        "fields":[
             "fetchTime",
             "requestedUrl",
             "audits.first-contentful-paint.numericValue",
