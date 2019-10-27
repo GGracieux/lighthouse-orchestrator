@@ -1,8 +1,8 @@
 FROM debian:buster
 
-# --- DEPENDENCES GENERALES
+# --- GENERAL DEPENDENCIES
 
-    # Installation des depenedences generales
+    # general dependencies installation
     RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-transport-https \
         ca-certificates \
@@ -10,31 +10,32 @@ FROM debian:buster
         gnupg \
         nano
 
+
 # --- CHROME -----------------------------------
         
-    # Ajout du depot pour google chrome
+    # Adding repo for chrome
     RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
         && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
-    # Installation google chrome & nodejs
+    # Chrome installation
     RUN apt-get update && apt-get install -y --no-install-recommends google-chrome-stable
 
-    # Ajout de l'utilisateur chrome
+    # Adds chrome user
     RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome
-      #  && mkdir -p /home/chrome/reports && chown -R chrome:chrome /home/chrome
 
 
 # --- NODEJS -----------------------------------------
 
-    # Ajout du depot nodejs
+    # Adding repo for nodejs
     RUN curl -sSL https://deb.nodesource.com/setup_12.x | bash - 
 
-    # Installation nodejs
+    # nodejs installation
     RUN apt-get update && apt-get install -y --no-install-recommends nodejs
 
 
 # --- LIGHTHOUSE ------------------------------------
 
+    # lighthouse installation
     RUN npm install -g lighthouse
 
 
@@ -43,10 +44,10 @@ FROM debian:buster
     # Installation
     RUN apt-get update && apt-get install -y --no-install-recommends cron
 
-    # copie de la conf crontab root dans un fichier temporaire
+    # Copy crontab conf to tmp file
     COPY conf/cron/root /tmp/crontab-root
 
-    # Installation de la crontab root et suppression fichier tmp
+    # Installing crontab and removing tmp file
     RUN crontab /tmp/crontab-root && rm /tmp/crontab-root
 
 
@@ -55,30 +56,27 @@ FROM debian:buster
     # Installation
     RUN apt-get update && apt-get install -y --no-install-recommends logrotate
 
-    # copie de la conf logrotate
+    # copy logrotate configuration
     COPY conf/logrotate/lightkeeper /etc/logrotate.d/
 
-    # Set les droits
+    # Set rights
     RUN chown root:root /etc/logrotate.d/lightkeeper && chmod 644 /etc/logrotate.d/lightkeeper
 
 
 # --- LIGHTKEEPER -----------------------------------
 
-    # Copie les sources
+    # Copy sources
     COPY app /lightkeeper
     RUN chmod +x /lightkeeper/lh-*
 
-    # Installation dépendences npm
+    # npm dependencies
     RUN cd /lightkeeper && npm install
 
-    # Ajout dans le path
+    # Adds to path
     ENV PATH="/lightkeeper:${PATH}"
 
 
 # --- CONTAINER --------------------------------------
-
-    # Dossier tmp
-    RUN mkdir -p /lightkeeper/tmp && chmod 750 /lightkeeper/tmp
 
     # Entrypoint
     COPY /conf/docker/entrypoint /usr/local/bin/entrypoint
@@ -88,5 +86,5 @@ FROM debian:buster
     # Set current workdir
     WORKDIR /lightkeeper
 
-    # Commande par defaut
+    # default command
     CMD lh-runner

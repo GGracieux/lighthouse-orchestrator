@@ -13,7 +13,7 @@ class Runner {
         this.qm.startEnqueuer()
     }
 
-    //--- Execution d'un test lightHouse ------------------------------
+    //--- Runs a lighthouse test ------------------------------
     runQueue() {
 
         let jobs = this.qm.getJobIdsToRun()
@@ -22,36 +22,36 @@ class Runner {
             this.lighthouse.runJob(jobs[0]).then(
                 result => {
     
-                    // Traite les resultats du test
+                    // Process job result
                     this.handleJobResult(result)
     
-                    // Lance le test suivant
+                    // Launch next job
                     this.runQueue()
                 
                 },
                 err => {
-                    let action = 'Erreur'
-                    logger.error('Job ' + err.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + err.urlConf.url)
+                    let action = 'Error'
+                    logger.error('Job ' + err.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + err.conf.url)
                     logger.error(JSON.stringify(err))
                 }
             )
         } else {
-            logger.info('Pas de test dans la queue, attente')
+            logger.info('No test in queue, wainting ...')
             setTimeout(this.runQueue.bind(this), 5000);
         }
     }
 
-    //--- Traite les résultats d'un test lightHouse ------------------------------
+    //--- Process lighthouse job results ------------------------------
     handleJobResult(jobResult) {
 
-        let action = 'Extraction';
-        logger.info('Job ' + jobResult.jobId + ' - ' + action.padEnd(10,' ') +  ' : ' + jobResult.urlConf.url)
+        let action = 'Extracting';
+        logger.info('Job ' + jobResult.jobId + ' - ' + action.padEnd(10,' ') +  ' : ' + jobResult.conf.url)
 
-        // lecture du rapport json
+        // reads report.json
         let jsonReportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report.json'
         let report = JSON.parse(fs.readFileSync(jsonReportPath, 'utf8'));
 
-        // Extraction des données
+        // extracting data
         let line = report["fetchTime"]
         line += ';' + report["requestedUrl"]
         line += ';' + report["audits"]["first-contentful-paint"]["numericValue"] 
@@ -61,38 +61,33 @@ class Runner {
         line += ';' + report["audits"]["interactive"]["numericValue"]
         line += ';' + report["audits"]["max-potential-fid"]["numericValue"]
 
-        // Ecriture dans le log de resultat
+        // writing result to log
         fs.appendFile(__dirname + '/../data/logs/results.log', line+"\n", function(err) {
             if(err) {
                 return console.log(err);
             }
         });
 
-        // Suppression du rapport json
+        // Removing json report
         fs.unlinkSync(jsonReportPath)
 
-        // Création du dossier de stockage du rapport html
+        // Creating directory structure for report storage
         let d = new Date()
         let datePart = d.getFullYear() + '/' + d.getMonth().toString().padStart(2,0) + '/' + d.getDay().toString().padStart(2,0)
         let archiveDir = __dirname + '/../data/reports/' + datePart + '/'
         mkdirp.sync(archiveDir)
 
-        // Déplacement du rapport html
+        // Moving html report
         let htmlReportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report.html'
         fs.renameSync(htmlReportPath, archiveDir + jobResult.jobId + '.report.html')
 
-        // Supprime le run de la queue
+        // Deleting .run file
         let runFilePath = __dirname + '/../data/tmp/' + jobResult.jobId + '.run.json'
         fs.unlinkSync(runFilePath)
 
         // Log
-        action = 'Fin'
-        logger.info('Job ' + jobResult.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + jobResult.urlConf.url)
-    }
-
-    //--- Extrait les données d'un résultat de test lightHouse ------------------------------
-    logJobData(jobId) {
-
+        action = 'End'
+        logger.info('Job ' + jobResult.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + jobResult.conf.url)
     }
 
 }

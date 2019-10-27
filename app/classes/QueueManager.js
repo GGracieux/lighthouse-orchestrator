@@ -1,44 +1,44 @@
-// dependences
+// Dependencies
 const fs = require('fs');
 const path = require('path');
 var CronJob = require('cron').CronJob;
 
 class QueueManager {
 
-    //--- Démarre la mise en file auto des jobs ------------------------------
+    //--- Starts job auto enqueuing  ------------------------------
     startEnqueuer() {
 
-        // lecture de la liste des urls a tester
-        var urlFile = JSON.parse(fs.readFileSync(__dirname + '/../conf/urls.json', 'utf8'));
+        // Reads job file
+        var jobFile = JSON.parse(fs.readFileSync(__dirname + '/../conf/jobs.json', 'utf8'));
 
-        // creation des jobs
-        urlFile.urls.forEach(url => {
-            new CronJob(url.cron, function() {
+        // Creates cron jobs
+        jobFile.jobs.forEach(job => {
+            new CronJob(job.cron, function() {
 
-                // determine les infos du job
+                // creates job id
                 let ts = new Date()
                 let rnd = Math.floor(Math.random() * Math.floor(999))
                 let jobid = ts.getTime() + '-' + rnd.toString().padStart(3, '0')
 
-                // Log
-                let action = 'Ajout'
-                logger.info('Job '  + jobid + ' - ' + action.padEnd(10,' ') + ' : ' + url.url)
+                // log
+                let action = 'Adding'
+                logger.info('Job '  + jobid + ' - ' + action.padEnd(10,' ') + ' : ' + job.url)
 
-                // Ecriture du fichier de run
-                url.qdate = ts.toISOString()
-                fs.writeFileSync(__dirname + '/../data/tmp/' + jobid + '.run.json', JSON.stringify(url), 'utf8')
+                // writes job run file
+                job.qdate = ts.toISOString()
+                fs.writeFileSync(__dirname + '/../data/tmp/' + jobid + '.run.json', JSON.stringify(job), 'utf8')
 
             }, null, true, 'Europe/Paris');
         });
     }
 
-    //--- Obtiens la liste des jobs a executer ------------------------------
+    //--- Gets a list of job wainting to be run  ------------------------------
     getJobIdsToRun() {
 
-        // Liste les fichiers /tmp
+        // List all files in tmp
         let files = fs.readdirSync(__dirname + '/../data/tmp/') 
 
-        // Recup de la liste des runs et des reports
+        // Separate .runs and .report files
         var runs = []
         var reports = []
         files.forEach(function (file) {
@@ -53,7 +53,7 @@ class QueueManager {
             }
         });
 
-        // Dedoublonage
+        // Deduplicate
         runs = runs.filter(function(elem, pos) {
             return runs.indexOf(elem) == pos;
         })
@@ -61,7 +61,7 @@ class QueueManager {
             return reports.indexOf(elem) == pos;
         })
 
-        // Suppression des run ayant deja des reports
+        // Removing runs already having reports
         reports.forEach(function (jobid) {
             let index = runs.indexOf(jobid);
             if (index > -1) {

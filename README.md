@@ -1,7 +1,7 @@
 ## TODO
-- profiles pour l'execution lighthouse (mobile & desktop)
-- reprise en cas d'erreur
-- rechargement de la conf en cas de changement
-- publication html locale
+- lighthouse execution profiles (mobile & desktop)
+- restart on error
+- reload conf on modification
+- publish report arbo through web server
 - filebeat
-- set les bons timings d'attente pour relancer des tests
+- set wait timing for queue check

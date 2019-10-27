@@ -1,13 +1,14 @@
+// Dependencies
 const fs = require('fs');
 
 class Lighthouse {
 
-    //--- Execution d'un test lightHouse ------------------------------
+    //--- Executes a lightHouse job ------------------------------
     runJob(jobId) {
-        let urlConf = JSON.parse(fs.readFileSync(__dirname + '/../data/tmp/'+ jobId + '.run.json', 'utf8'));
-        let action = 'Lancement'
-        logger.info('Job '  + jobId + ' - ' + action.padEnd(10,' ') + ' : ' + urlConf.url)
-        let cmd  = 'lighthouse ' + urlConf.url
+        let job = JSON.parse(fs.readFileSync(__dirname + '/../data/tmp/'+ jobId + '.run.json', 'utf8'));
+        let action = 'Launching'
+        logger.info('Job '  + jobId + ' - ' + action.padEnd(10,' ') + ' : ' + job.url)
+        let cmd  = 'lighthouse ' + job.url
         cmd += ' --output html --output json'
         cmd += ' --output-path ' + __dirname + '/../data/tmp/' + jobId
         cmd += ' --chrome-flags="--headless --no-sandbox"'
@@ -17,7 +18,7 @@ class Lighthouse {
                 if (error) {
                     reject({
                         jobId: jobId,
-                        urlConf: urlConf,
+                        conf: job,
                         stdout: stdout,
                         stderr: stderr,
                         error: error
@@ -25,7 +26,7 @@ class Lighthouse {
                 } else {
                     resolve({
                         jobId: jobId,
-                        urlConf: urlConf,
+                        conf: job,
                         stdout: stdout,
                         stderr: stderr
                     });

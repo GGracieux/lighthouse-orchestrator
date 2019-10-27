@@ -1,12 +1,12 @@
 {
   "name": "lightkeeper",
   "version": "1.0.0",
-  "description": "Lighthouse queue runner",
+  "description": "Lighthouse job orchestrator",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "guillaume.gracieux@maxicoffee.com",
+  "author": "ggracieux@gmail.com",
   "license": "ISC",
   "dependencies": {
     "cron": "^1.7.2",
