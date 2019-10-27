@@ -5,15 +5,31 @@ var CronJob = require('cron').CronJob;
 
 class QueueManager {
 
+    //--- Initialisation ------------------------------
+    constructor() {
+        this.cronjobs = []
+    }
+
+    //--- Starts job auto enqueuing  ------------------------------
+    setAutoReloadOnConfigChange() {
+        fs.watchFile(__dirname + '/../conf/jobs.json', (curr, prev) => {
+            logger.info('Job conf changed, reloading')
+            this.startEnqueuer()
+        });
+    }
+
     //--- Starts job auto enqueuing  ------------------------------
     startEnqueuer() {
+
+        // Stop current cronjobs
+        this.stopEnqueuer()
 
         // Reads job file
         var jobFile = JSON.parse(fs.readFileSync(__dirname + '/../conf/jobs.json', 'utf8'));
 
         // Creates cron jobs
         jobFile.jobs.forEach(job => {
-            new CronJob(job.cron, function() {
+            this.cronjobs.push(new CronJob(job.cron, function() {
 
                 // creates job id
                 let ts = new Date()
@@ -28,8 +44,16 @@ class QueueManager {
                 job.qdate = ts.toISOString()
                 fs.writeFileSync(__dirname + '/../data/tmp/' + jobid + '.run.json', JSON.stringify(job), 'utf8')
 
-            }, null, true, 'Europe/Paris');
+            }, null, true, 'Europe/Paris'));
         });
+    }
+
+    //--- Stops job auto enqueuing  ------------------------------
+    stopEnqueuer() {
+        this.cronjobs.forEach(cronjob => {
+            cronjob.stop()
+        }) 
+        this.cronjobs = []
     }
 
     //--- Gets a list of job wainting to be run  ------------------------------

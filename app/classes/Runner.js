@@ -12,6 +12,7 @@ class Runner {
 
         this.qm = new QueueManager()
         this.qm.emptyQueue()
+        this.qm.setAutoReloadOnConfigChange()
         this.qm.startEnqueuer()
 
         this.lighthouse = new Lighthouse()
