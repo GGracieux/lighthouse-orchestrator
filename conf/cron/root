@@ -1,0 +1,2 @@
+# Rotation des logs
+0 4 * * * /usr/sbin/logrotate -vf /etc/logrotate.conf

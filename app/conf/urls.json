@@ -1,0 +1,14 @@
+{
+    "urls": [
+        {
+            "url":"https://www.google.fr",
+            "profile":[ "mobile", "dektop"],
+            "cron": "*/10 * * * * *"
+        },
+        {
+            "url":"https://www.example.com",
+            "profile":[ "mobile", "dektop"],
+            "cron": "*/10 * * * * *"
+        }
+    ]
+}

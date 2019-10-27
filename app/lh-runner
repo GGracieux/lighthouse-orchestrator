@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+// Instanciation d'un logger global
+const Logger = require('./classes/Logger.js')
+global.logger = new Logger(__dirname + '/data/logs/lightkeeper.log', true)
+
+// Instanciation et lancement du runner
+const Runner = require('./classes/Runner.js')
+let runner = new Runner()
+runner.runQueue()
