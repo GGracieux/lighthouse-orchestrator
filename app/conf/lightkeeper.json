@@ -1,12 +1,6 @@
 {
-    "queue-check-delay" : "5000",
-    "output": {
-        "reports": true,
-        "logs": true
-    },
     "reports":{
-        "formats": ["html", "json", "csv"],
-        "web-access": true
+        "formats": ["html", "json", "csv"]
     },
     "logs":{
         "report-fields":[
@@ -19,5 +13,6 @@
             "audits.interactive.numericValue",
             "audits.max-potential-fid.numericValue"
         ]
-    }
+    },
+    "web-server":true
 }

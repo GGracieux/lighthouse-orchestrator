@@ -37,7 +37,7 @@ class Runner {
             )
         } else {
             logger.info('No test in queue, wainting ...')
-            setTimeout(this.runQueue.bind(this), global.conf["queue-check-delay"]);
+            setTimeout(this.runQueue.bind(this), 3000); // 60000
         }
     }
 
@@ -52,14 +52,25 @@ class Runner {
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
-        let line = report["fetchTime"]
-        line += ';' + report["requestedUrl"]
-        line += ';' + report["audits"]["first-contentful-paint"]["numericValue"] 
-        line += ';' + report["audits"]["first-meaningful-paint"]["numericValue"]
-        line += ';' + report["audits"]["speed-index"]["numericValue"]
-        line += ';' + report["audits"]["first-cpu-idle"]["numericValue"]
-        line += ';' + report["audits"]["interactive"]["numericValue"]
-        line += ';' + report["audits"]["max-potential-fid"]["numericValue"]
+        let line = jobResult.jobId
+        global.conf.logs["report-fields"].forEach(key => {
+            let keyparts = key.split('.')
+            let item = report
+            var BreakException = {};
+            try {
+                keyparts.forEach(keypart => {
+                    if (item.hasOwnProperty(keypart)) {
+                        item = item[keypart]
+                    } else {
+                        throw "not found property";
+                    }
+                })
+            } catch(e) {
+                item = ''
+            }
+            line += ";" + item
+        })
+        console.log(line)
 
         // writing result to log
         fs.appendFile(__dirname + '/../data/logs/results.log', line+"\n", function(err) {
