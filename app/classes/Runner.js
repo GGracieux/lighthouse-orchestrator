@@ -37,7 +37,7 @@ class Runner {
             )
         } else {
             logger.info('No test in queue, wainting ...')
-            setTimeout(this.runQueue.bind(this), 5000);
+            setTimeout(this.runQueue.bind(this), global.conf["queue-check-delay"]);
         }
     }
 
@@ -48,8 +48,8 @@ class Runner {
         logger.info('Job ' + jobResult.jobId + ' - ' + action.padEnd(10,' ') +  ' : ' + jobResult.conf.url)
 
         // reads report.json
-        let jsonReportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report.json'
-        let report = JSON.parse(fs.readFileSync(jsonReportPath, 'utf8'));
+        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
+        let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
         let line = report["fetchTime"]
@@ -68,18 +68,21 @@ class Runner {
             }
         });
 
-        // Removing json report
-        fs.unlinkSync(jsonReportPath)
-
         // Creating directory structure for report storage
         let d = new Date()
         let datePart = d.getFullYear() + '/' + d.getMonth().toString().padStart(2,0) + '/' + d.getDay().toString().padStart(2,0)
         let archiveDir = __dirname + '/../data/reports/' + datePart + '/'
         mkdirp.sync(archiveDir)
 
-        // Moving html report
-        let htmlReportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report.html'
-        fs.renameSync(htmlReportPath, archiveDir + jobResult.jobId + '.report.html')
+        // Moving reports
+        global.conf["reports"]["formats"].forEach(format => {
+            fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobId + '.report.' + format)
+        });
+
+        // Removing json report
+        if (!global.conf["reports"]["formats"].includes('json')) {
+            fs.unlinkSync(reportPath + '.json')
+        }
 
         // Deleting .run file
         let runFilePath = __dirname + '/../data/tmp/' + jobResult.jobId + '.run.json'

@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// Loads lighthkeeper config
+const fs = require('fs');
+global.conf = JSON.parse(fs.readFileSync(__dirname + '/conf/lightkeeper.json', 'utf8'));
+
 // Creates global logger
 const Logger = require('./classes/Logger.js')
 global.logger = new Logger(__dirname + '/data/logs/lightkeeper.log', true)

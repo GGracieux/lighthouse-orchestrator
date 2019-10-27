@@ -1,0 +1,19 @@
+{
+    "queue-check-delay" : "5000",
+    "reports":{
+        "formats": ["html", "json", "csv"],
+        "web-access": true
+    },
+    "logs":{
+        "report-fields":[
+            "fetchTime",
+            "requestedUrl",
+            "audits.first-contentful-paint.numericValue",
+            "audits.first-meaningful-paint.numericValue",
+            "audits.speed-index.numericValue",
+            "audits.first-cpu-idle.numericValue",
+            "audits.interactive.numericValue",
+            "audits.max-potential-fid.numericValue"
+        ]
+    }
+}
