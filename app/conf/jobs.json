@@ -2,12 +2,12 @@
     "jobs": [
         {
             "url":"https://www.google.fr",
-            "profile":[ "mobile", "desktop"],
+            "profiles":[ "mobile", "desktop"],
             "cron": "*/10 * * * * *"
         },
         {
             "url":"https://www.example.com",
-            "profile":[ "mobile", "desktop"],
+            "profiles":[ "mobile", "desktop"],
             "cron": "*/10 * * * * *"
         }
     ]
