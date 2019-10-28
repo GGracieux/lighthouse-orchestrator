@@ -1,14 +1,14 @@
 {
     "jobs": [
         {
-            "url":"https://www.google.fr",
+            "url":"https://www.google.com",
             "profiles":[ "mobile", "desktop"],
-            "cron": "*/10 * * * * *"
+            "cron": "1 */10 * * * *"
         },
         {
             "url":"https://www.example.com",
             "profiles":[ "mobile", "desktop"],
-            "cron": "*/10 * * * * *"
+            "cron": "1 */10 * * * *"
         }
     ]
 }
