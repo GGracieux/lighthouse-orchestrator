@@ -80,15 +80,29 @@ Lightkeeper comes with two default profiles, mobile and desktop, they are identi
 
 ## Launch
 
-To launch lightkeeper, just build the project and run it
-```bash
+To launch lightkeeper locally
+    ```bash
+    # Prerequisites n°1 - Install lighthouse
+    npm install -g lighthouse
 
-# Build docker image
-docker-compose buid
+    # Prerequisites n°2 - Install npm dependencies
+    cd app
+    npm install
 
-# Run image
-docker-compose up
-```
+    # Run lighthouse
+    cd app
+    ./lighthouse
+    ```
+
+To launch lightkeeper with docker
+    ```bash
+
+    #  Prerequisites n°1 - Build docker image
+    docker-compose buid
+
+    # Run image
+    docker-compose up
+    ```
 
 ## Results
 
