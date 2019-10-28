@@ -42,7 +42,7 @@ FROM debian:buster
 # --- LIGHTKEEPER -----------------------------------
 
     # Copy sources
-    COPY app /lightkeeper
+    COPY ./ /lightkeeper
     RUN chmod +x /lightkeeper/lightkeeper
 
     # npm dependencies

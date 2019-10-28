@@ -1,14 +1,14 @@
 # Lightkeeper
 
 Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
-- Configure with json files under /app/conf
-- Launch with lightkeeper executable file under /app
+- Configure with json files under /conf
+- Launch with lightkeeper executable file under /
 - Get job results under /data or through http://localhost
 
 
 ## Configuration
 
-All configuration files are located under the app/conf :
+All configuration files are located under /conf :
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -86,11 +86,9 @@ To launch lightkeeper locally
     npm install -g lighthouse
 
     # Prerequisites n°2 - Install npm dependencies
-    cd app
     npm install
 
     # Run lighthouse
-    cd app
     ./lighthouse
     ```
 
@@ -106,7 +104,7 @@ To launch lightkeeper with docker
 
 ## Results
 
-Every data produced by lightkeeper is stored under /app/data
+Every data produced by lightkeeper is stored under /data
 
 ### /data/log/lightkeeper.log
 This is the application log, it monitors job activity, and errors. 
