@@ -63,7 +63,7 @@ class Runner {
         logger.info('Job ' + jobResult.jobConf.id + ' : Processing (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
 
         // Log des résultats
-        if (global.conf.logs.fields.length > 0) {
+        if (global.conf.logs.params || global.conf.logs.fields.length > 0) {
             this.logResults(jobResult) 
         }
 
