@@ -5,6 +5,7 @@ const CronJob = require('cron').CronJob;
 
 class Rotator {
 
+    //--- Adds an automatic rotation for specified file -------------------------------------
     setRotation(file, frequency, retention) {
         new CronJob(frequency, function() {
             rotate(path.resolve(file), { count: retention }, function(err) {

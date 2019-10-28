@@ -21,13 +21,13 @@ class QueueManager {
     //--- Starts job auto enqueuing  ------------------------------
     startEnqueuer() {
 
-        // Stop current cronjobs
+        // stop current cronjobs
         this.stopEnqueuer()
 
-        // Reads job file
+        // reads job file
         var jobFile = JSON.parse(fs.readFileSync(__dirname + '/../conf/jobs.json', 'utf8'));
 
-        // Creates cron jobs
+        // creates cron jobs
         jobFile.jobs.forEach(job => {
             this.cronjobs.push(new CronJob(job.cron, function() {
 
@@ -70,10 +70,10 @@ class QueueManager {
     //--- Gets a list of job wainting to be run  ------------------------------
     getJobIdsToRun() {
 
-        // List all files in tmp
+        // list all files in tmp
         let files = fs.readdirSync(__dirname + '/../data/tmp/') 
 
-        // Separate .runs and .report files
+        // split .runs and .report files
         var runs = []
         var reports = []
         files.forEach(function (file) {
@@ -88,7 +88,7 @@ class QueueManager {
             }
         });
 
-        // Deduplicate
+        // deduplicate
         runs = runs.filter(function(elem, pos) {
             return runs.indexOf(elem) == pos;
         })
@@ -96,7 +96,7 @@ class QueueManager {
             return reports.indexOf(elem) == pos;
         })
 
-        // Removing runs already having reports
+        // removing runs already having reports
         reports.forEach(function (jobid) {
             let index = runs.indexOf(jobid);
             if (index > -1) {
@@ -107,7 +107,7 @@ class QueueManager {
         return runs
     }
 
-    //--- Remove job from queue -------------------------------------
+    //--- Remove specific job from queue -------------------------------------
     removeJob(jobId) {
         let runFilePath = __dirname + '/../data/tmp/' + jobId + '.run.json'
         fs.unlinkSync(runFilePath)

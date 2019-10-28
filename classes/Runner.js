@@ -30,7 +30,7 @@ class Runner {
         // webserver
         if (global.conf.webserver.enabled) {
             let webserver = new Webserver()
-            webserver.start(global.conf.webserver.port)
+            webserver.start(__dirname + '/../data', global.conf.webserver.port)
         }
     }
 
@@ -45,27 +45,27 @@ class Runner {
             this.lighthouse.runJob(jobConf).then(
                 jobResult => {
     
-                    // Process job result
+                    // process job result
                     this.processJobResult(jobResult)
 
-                    // Remove job from queue
+                    // remove job from queue
                     logger.info('Job ' + jobResult.jobConf.id  + ' : Ending (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
                     this.qm.removeJob(jobResult.jobConf.id)
     
-                    // Launch next job
+                    // launch next job
                     this.runQueue()
                 
                 },
                 err => {
 
-                    // Log error
+                    // log error
                     logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url)
                     logger.error(JSON.stringify(err))
 
-                    // Clean error
+                    // clean error
                     this.cleanMess(err)
 
-                    // Launch next job
+                    // launch next job
                     this.runQueue()
                 }
             )
@@ -78,15 +78,15 @@ class Runner {
     //--- Process lighthouse job results ------------------------------
     processJobResult(jobResult) {
 
-        // Log
+        // action log
         logger.info('Job ' + jobResult.jobConf.id + ' : Processing (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
 
-        // Log des résultats
+        // result log
         if (global.conf.logs.params || global.conf.logs.fields.length > 0) {
             this.logResults(jobResult) 
         }
 
-        // Archivage des rapports
+        // saving reports
         if (global.conf.reports.formats.length > 0) {
             this.archiveReports(jobResult)
         }
@@ -130,25 +130,25 @@ class Runner {
     //--- Archive lighthouse reports to final directory ------------------------------
     archiveReports(jobResult) {
 
-        // Creating directory structure for report storage
+        // creating directory structure for report storage
         let d = new Date()
         let datePart = d.getFullYear() + '/' + (d.getMonth()+1).toString().padStart(2,0) + '/' + d.getDate().toString().padStart(2,0)
         let archiveDir = __dirname + '/../data/reports/' + datePart + '/'
         mkdirp.sync(archiveDir)
 
-        // Moving reports
+        // moving reports
         let reportPath = __dirname + '/../data/tmp/' + jobResult.jobConf.id + '.report'
         global.conf["reports"]["formats"].forEach(format => {
             fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobConf.id + '-' + jobResult.jobConf.profile + '-' + slugify(jobResult.jobConf.url).substring(0, 100) + '.' + format)
         });
 
-        // Removing json report
+        //removing json report
         if (!global.conf["reports"]["formats"].includes('json')) {
             fs.unlinkSync(reportPath + '.json')
         }
     }
 
-    //--- Clean the mess ------------------------------
+    //--- Clean failed test------------------------------
     cleanMess(err) {
         let tmpdir = path.resolve(__dirname + '/../data/tmp/' + err.jobConf.id)
         let jobFiles = glob.sync(tmpdir+ '*')

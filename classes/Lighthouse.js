@@ -7,18 +7,18 @@ class Lighthouse {
     runJob(jobConf) {
         logger.info('Job '  + jobConf.id + ' : Launching : (' + jobConf.profile + ') ' + jobConf.url)
 
-        // Composition de la commande lighthouse
+        // compose lighthouse command
         let cmd  = 'lighthouse ' + jobConf.url
         cmd += ' --output-path ' + __dirname + '/../data/tmp/' + jobConf.id
         cmd += ' --chrome-flags="--headless --no-sandbox"'
         cmd += ' --config-path ' + __dirname + '/../conf/profile.' + jobConf.profile + '.json'
 
-        // Ajout des formats de logs
+        // setting log format
         global.conf["reports"]["formats"].forEach(format => {
             cmd += ' --output ' + format
         });
 
-        // Ajout du format json pour l'extraction des resultats
+        // adds json format for result extraction
         if (!global.conf["reports"]["formats"].includes('json')) {
             cmd += ' --output json'
         }

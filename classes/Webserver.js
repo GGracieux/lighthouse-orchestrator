@@ -4,10 +4,11 @@ var app = express()
 
 class Webserver {
 
-    start() {
-        app.use(express.static(__dirname + '/../data'));
-        app.use(serveIndex(__dirname + '/../data'));
-        app.listen(global.conf.webserver.port);
+    //--- Starts webserver on specific port and directory ------------------------------
+    start(directory, port) {
+        app.use(express.static(directory));
+        app.use(serveIndex(directory));
+        app.listen(port);
     }
 
 }
