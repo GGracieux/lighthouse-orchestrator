@@ -7,7 +7,7 @@ class Webserver {
     start() {
         app.use(express.static(__dirname + '/../data'));
         app.use(serveIndex(__dirname + '/../data'));
-        app.listen(80);
+        app.listen(global.conf.webserver.port);
     }
 
 }
