@@ -67,7 +67,7 @@ FROM debian:buster
 
     # Copy sources
     COPY app /lightkeeper
-    RUN chmod +x /lightkeeper/lh-*
+    RUN chmod +x /lightkeeper/lightkeeper
 
     # npm dependencies
     RUN cd /lightkeeper && npm install
@@ -87,4 +87,4 @@ FROM debian:buster
     WORKDIR /lightkeeper
 
     # default command
-    CMD lh-runner
+    CMD lightkeeper
