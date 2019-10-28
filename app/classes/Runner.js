@@ -52,7 +52,7 @@ class Runner {
             )
         } else {
             logger.info('No test in queue, wainting ...')
-            setTimeout(this.runQueue.bind(this), 3000); // 60000
+            setTimeout(this.runQueue.bind(this), 60000);
         }
     }
 
@@ -82,7 +82,7 @@ class Runner {
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
-        let line = jobResult.jobConf.id + ';' + jobResult.jobConf.profile
+        let line = (global.conf.logs.params) ? jobResult.jobConf.id + ';' + jobResult.jobConf.url + ';' + jobResult.jobConf.profile + ';' + jobResult.jobConf.qdate : ''
         global.conf.logs.fields.forEach(key => {
             let keyparts = key.split('.')
             let item = report

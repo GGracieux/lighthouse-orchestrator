@@ -48,12 +48,10 @@ class QueueManager {
                     })
 
                     // log
-                    logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)                    
+                    logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)
 
-                    // writes job run file                        
-                // writes job run file
-                    // writes job run file                        
-                    fs.writeFileSync(__dirname + '/../data/tmp/' + jobId + '.run.json', runStr, 'utf8')                    
+                    // writes job run file
+                    fs.writeFileSync(__dirname + '/../data/tmp/' + jobId + '.run.json', runStr, 'utf8')
 
                 })
 

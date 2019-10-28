@@ -3,6 +3,7 @@
         "formats": ["html", "json", "csv"]
     },
     "logs":{
+        "params":true,
         "fields":[
             "fetchTime",
             "requestedUrl",
