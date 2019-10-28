@@ -1,9 +1,11 @@
-const fs = require('fs');
+const fs = require('fs')
+const path = require('path')
 const QueueManager = require('./QueueManager.js')
 const Lighthouse = require('./Lighthouse.js')
 const Webserver = require('./Webserver.js')
 const mkdirp = require('mkdirp');
 const slugify = require('slugify')
+const glob = require("glob")
 
 class Runner {
 
@@ -46,8 +48,16 @@ class Runner {
                 
                 },
                 err => {
+
+                    // Log error
                     logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url)
                     logger.error(JSON.stringify(err))
+
+                    // Clean error
+                    this.cleanMess(err)
+
+                    // Launch next job
+                    this.runQueue()
                 }
             )
         } else {
@@ -127,6 +137,16 @@ class Runner {
         if (!global.conf["reports"]["formats"].includes('json')) {
             fs.unlinkSync(reportPath + '.json')
         }
+    }
+
+    //--- Clean the mess ------------------------------
+    cleanMess(err) {
+        let tmpdir = path.resolve(__dirname + '/../data/tmp/' + err.jobConf.id)
+        let jobFiles = glob.sync(tmpdir+ '*')
+        jobFiles.forEach(jobFile => {
+            console.log(jobFile)
+            fs.unlinkSync(jobFile)
+        })
     }
 
 }
