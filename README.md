@@ -5,14 +5,6 @@ Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 - Launch with lightkeeper executable file under /app
 - Get job results under /data or through http://localhost
 
-## TODO
-- allow to run without docker
-- better error handling
-- restart on crash
-- npm publish
-- dockerhub publish
-- customize log rotation
-- add customizable report purge
 
 ## Configuration
 
