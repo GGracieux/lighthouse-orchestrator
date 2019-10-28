@@ -11,6 +11,7 @@ class Lighthouse {
         let cmd  = 'lighthouse ' + jobConf.url
         cmd += ' --output-path ' + __dirname + '/../data/tmp/' + jobConf.id
         cmd += ' --chrome-flags="--headless --no-sandbox"'
+        cmd += ' --config-path ' + __dirname + '/../conf/profile.' + jobConf.profile + '.json'
 
         // Ajout des formats de logs
         global.conf["reports"]["formats"].forEach(format => {
