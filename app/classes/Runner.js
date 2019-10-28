@@ -82,7 +82,7 @@ class Runner {
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
-        let line = jobResult.jobConf.id
+        let line = jobResult.jobConf.id + ';' + jobResult.jobConf.profile
         global.conf.logs.fields.forEach(key => {
             let keyparts = key.split('.')
             let item = report
@@ -113,7 +113,7 @@ class Runner {
 
         // Creating directory structure for report storage
         let d = new Date()
-        let datePart = d.getFullYear() + '/' + d.getMonth().toString().padStart(2,0) + '/' + d.getDay().toString().padStart(2,0)
+        let datePart = d.getFullYear() + '/' + (d.getMonth()+1).toString().padStart(2,0) + '/' + d.getDate().toString().padStart(2,0)
         let archiveDir = __dirname + '/../data/reports/' + datePart + '/'
         mkdirp.sync(archiveDir)
 
