@@ -140,5 +140,5 @@ ls -l reports/2019/10/27/
 1572258601023-594-desktop-https:www.google.com.json
 ```
 
-### /tmp/reports
+### /tmp
 This folder contains the job queue and lighthouse reports before they are moved to /data/reports
