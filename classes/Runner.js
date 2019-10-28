@@ -24,8 +24,9 @@ class Runner {
 
         // log rotator
         let rotator = new Rotator()
-        rotator.setRotation(__dirname + '/../data/logs/lightkeeper.log', '* * 2 * * *', global.conf.retention.logs)
-        rotator.setRotation(__dirname + '/../data/logs/results.log', '* * 2 * * *', global.conf.retention.logs)
+        rotator.setFileRotationRetention(__dirname + '/../data/logs/lightkeeper.log', '1 0 2 * * *', global.conf.retention.logs)
+        rotator.setFileRotationRetention(__dirname + '/../data/logs/results.log', '1 0 2 * * *', global.conf.retention.logs)
+        rotator.setTimeTreeRetention(__dirname + '/../data/reports', '1 0 2 * * *', global.conf.retention.reports)
 
         // webserver
         if (global.conf.webserver.enabled) {
