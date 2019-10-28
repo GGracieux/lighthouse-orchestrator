@@ -1,23 +1,5 @@
 #!/bin/sh
 
-echo
-echo ">>> CHECKING DIRECTORIES RIGHTS"
-
-echo "/lightkeeper/data/tmp"
-mkdir -p /lightkeeper/data/tmp
-chown chrome:chrome /lightkeeper/data/tmp
-chmod 755 /lightkeeper/data/tmp
-
-echo "/lightkeeper/data/logs"
-mkdir -p /lightkeeper/data/logs
-chown root:root /lightkeeper/data/logs
-chmod 755 /lightkeeper/data/logs
-
-echo "/lightkeeper/data/reports"
-mkdir -p /lightkeeper/data/reports
-chown root:root /lightkeeper/data/reports
-chmod 755 /lightkeeper/data/reports
-
 echo 
 echo ">>> LAUNCHING CRON DAEMON"
 service cron start
