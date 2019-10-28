@@ -4,14 +4,12 @@ const fs = require('fs');
 class Lighthouse {
 
     //--- Executes a lightHouse job ------------------------------
-    runJob(jobId) {
-        let job = JSON.parse(fs.readFileSync(__dirname + '/../data/tmp/'+ jobId + '.run.json', 'utf8'));
-        let action = 'Launching'
-        logger.info('Job '  + jobId + ' - ' + action.padEnd(10,' ') + ' : ' + job.url)
+    runJob(jobConf) {
+        logger.info('Job '  + jobConf.id + ' : Launching : (' + jobConf.profile + ') ' + jobConf.url)
 
         // Composition de la commande lighthouse
-        let cmd  = 'lighthouse ' + job.url
-        cmd += ' --output-path ' + __dirname + '/../data/tmp/' + jobId
+        let cmd  = 'lighthouse ' + jobConf.url
+        cmd += ' --output-path ' + __dirname + '/../data/tmp/' + jobConf.id
         cmd += ' --chrome-flags="--headless --no-sandbox"'
 
         // Ajout des formats de logs
@@ -29,16 +27,14 @@ class Lighthouse {
             exec(cmd, (error, stdout, stderr) => {
                 if (error) {
                     reject({
-                        jobId: jobId,
-                        conf: job,
+                        jobConf: jobConf,
                         stdout: stdout,
                         stderr: stderr,
                         error: error
                     })
                 } else {
                     resolve({
-                        jobId: jobId,
-                        conf: job,
+                        jobConf: jobConf,
                         stdout: stdout,
                         stderr: stderr
                     });

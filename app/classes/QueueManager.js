@@ -31,18 +31,31 @@ class QueueManager {
         jobFile.jobs.forEach(job => {
             this.cronjobs.push(new CronJob(job.cron, function() {
 
-                // creates job id
-                let ts = new Date()
-                let rnd = Math.floor(Math.random() * Math.floor(999))
-                let jobid = ts.getTime() + '-' + rnd.toString().padStart(3, '0')
+                // writes one job per profile
+                job.profiles.forEach(profile => {
 
-                // log
-                let action = 'Adding'
-                logger.info('Job '  + jobid + ' - ' + action.padEnd(10,' ') + ' : ' + job.url)
+                    // creates job id
+                    let ts = new Date()
+                    let rnd = Math.floor(Math.random() * Math.floor(999))
+                    let jobId = ts.getTime() + '-' + rnd.toString().padStart(3, '0')
 
+                    // compose run json
+                    let runStr = JSON.stringify({
+                        id: jobId,
+                        url: job.url,
+                        profile: profile,
+                        qdate: ts.toISOString()
+                    })
+
+                    // log
+                    logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)                    
+
+                    // writes job run file                        
                 // writes job run file
-                job.qdate = ts.toISOString()
-                fs.writeFileSync(__dirname + '/../data/tmp/' + jobid + '.run.json', JSON.stringify(job), 'utf8')
+                    // writes job run file                        
+                    fs.writeFileSync(__dirname + '/../data/tmp/' + jobId + '.run.json', runStr, 'utf8')                    
+
+                })
 
             }, null, true, 'Europe/Paris'));
         });

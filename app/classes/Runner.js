@@ -29,24 +29,24 @@ class Runner {
         let jobs = this.qm.getJobIdsToRun()
         if (jobs.length > 0) {
           
-            this.lighthouse.runJob(jobs[0]).then(
-                result => {
+            let jobConf = JSON.parse(fs.readFileSync(__dirname + '/../data/tmp/'+ jobs[0] + '.run.json', 'utf8'));
+
+            this.lighthouse.runJob(jobConf).then(
+                jobResult => {
     
                     // Process job result
-                    this.processJobResult(result)
+                    this.processJobResult(jobResult)
 
                     // Remove job from queue
-                    let action = 'Ending'
-                    logger.info('Job ' + result.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + result.conf.url)
-                    this.qm.removeJob(result.jobId)
+                    logger.info('Job ' + jobResult.jobConf.id  + ' : Ending (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
+                    this.qm.removeJob(jobResult.jobConf.id)
     
                     // Launch next job
                     this.runQueue()
                 
                 },
                 err => {
-                    let action = 'Error'
-                    logger.error('Job ' + err.jobId  + ' - ' +  action.padEnd(10,' ') + ' : ' + err.conf.url)
+                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url)
                     logger.error(JSON.stringify(err))
                 }
             )
@@ -60,8 +60,7 @@ class Runner {
     processJobResult(jobResult) {
 
         // Log
-        let action = 'Processing';
-        logger.info('Job ' + jobResult.jobId + ' - ' + action.padEnd(10,' ') +  ' : ' + jobResult.conf.url)
+        logger.info('Job ' + jobResult.jobConf.id + ' : Processing (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
 
         // Log des résultats
         if (global.conf.logs.fields.length > 0) {
@@ -79,11 +78,11 @@ class Runner {
     logResults(jobResult) {
     
         // reads report.json
-        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
+        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobConf.id + '.report'
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
-        let line = jobResult.jobId
+        let line = jobResult.jobConf.id
         global.conf.logs.fields.forEach(key => {
             let keyparts = key.split('.')
             let item = report
@@ -119,9 +118,9 @@ class Runner {
         mkdirp.sync(archiveDir)
 
         // Moving reports
-        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobId + '.report'
+        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobConf.id + '.report'
         global.conf["reports"]["formats"].forEach(format => {
-            fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobId + '-' + slugify(jobResult.conf.url).substring(0, 100) + '.' + format)
+            fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobConf.id + '-' + jobResult.jobConf.profile + '-' + slugify(jobResult.jobConf.url).substring(0, 100) + '.' + format)
         });
 
         // Removing json report

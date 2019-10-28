@@ -1,3 +1,4 @@
 ## TODO
-- lighthouse execution profiles (mobile & desktop)
-- restart on error
+- better error handling
+- restart on crash
+- add readme
