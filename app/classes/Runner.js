@@ -3,6 +3,7 @@ const path = require('path')
 const QueueManager = require('./QueueManager.js')
 const Lighthouse = require('./Lighthouse.js')
 const Webserver = require('./Webserver.js')
+const Rotator = require('./Rotator.js')
 const mkdirp = require('mkdirp');
 const slugify = require('slugify')
 const glob = require("glob")
@@ -12,13 +13,21 @@ class Runner {
     //--- Initialisation ------------------------------
     constructor() {
 
+        // queue manager
         this.qm = new QueueManager()
         this.qm.emptyQueue()
         this.qm.setAutoReloadOnConfigChange()
         this.qm.startEnqueuer()
 
+        // lighthouse
         this.lighthouse = new Lighthouse()
 
+        // log rotator
+        let rotator = new Rotator()
+        rotator.setRotation(__dirname + '/../data/logs/lightkeeper.log', '* * 2 * * *', global.conf.retention.logs)
+        rotator.setRotation(__dirname + '/../data/logs/results.log', '* * 2 * * *', global.conf.retention.logs)
+
+        // webserver
         if (global.conf.webserver.enabled) {
             let webserver = new Webserver()
             webserver.start(global.conf.webserver.port)
@@ -61,7 +70,7 @@ class Runner {
                 }
             )
         } else {
-            logger.info('No test in queue, wainting ...')
+            logger.info('No test in queue, waiting ...')
             setTimeout(this.runQueue.bind(this), 60000);
         }
     }

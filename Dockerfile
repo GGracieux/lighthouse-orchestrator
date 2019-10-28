@@ -39,30 +39,6 @@ FROM debian:buster
     RUN npm install -g lighthouse
 
 
-# CRONTAB ------------------------------------------------
-
-    # Installation
-    RUN apt-get update && apt-get install -y --no-install-recommends cron
-
-    # Copy crontab conf to tmp file
-    COPY conf/cron/root /tmp/crontab-root
-
-    # Installing crontab and removing tmp file
-    RUN crontab /tmp/crontab-root && rm /tmp/crontab-root
-
-
-# LOGROTATE ------------------------------------------------
-
-    # Installation
-    RUN apt-get update && apt-get install -y --no-install-recommends logrotate
-
-    # copy logrotate configuration
-    COPY conf/logrotate/lightkeeper /etc/logrotate.d/
-
-    # Set rights
-    RUN chown root:root /etc/logrotate.d/lightkeeper && chmod 644 /etc/logrotate.d/lightkeeper
-
-
 # --- LIGHTKEEPER -----------------------------------
 
     # Copy sources
@@ -77,11 +53,6 @@ FROM debian:buster
 
 
 # --- CONTAINER --------------------------------------
-
-    # Entrypoint
-    COPY /conf/docker/entrypoint /usr/local/bin/entrypoint
-    RUN chmod +x /usr/local/bin/entrypoint
-    ENTRYPOINT [ "entrypoint" ]
 
     # Set current workdir
     WORKDIR /lightkeeper
