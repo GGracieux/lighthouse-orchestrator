@@ -3,27 +3,41 @@ const rotate = require('log-rotate')
 const path = require('path')
 const rimraf = require('rimraf')
 const CronJob = require('cron').CronJob;
+const findRemoveSync = require('find-remove')
 
 
 class Rotator {
 
-    //--- Adds an automatic rotation for specified file -------------------------------------
-    setFileRotationRetention(file, frequency, retention) {
+    //--- Adds an automatic purge for specified directory -------------------------------------
+    setDirectoryRetention(directory, frequency, retention) {
         new CronJob(frequency, function() {
-            rotate(path.resolve(file), { count: retention }, function(err) {
-                let fname = path.basename(file)
-                if (err !== null) {
-                    logger.warn('File ' + fname + ' : rotation error : ' + err)
-                } else {
-                    logger.info('File ' + fname + ' : rotation OK')
+
+            // info
+            logger.info('Purge directory (max ' + retention + ' days) : ' + directory)
+
+            // removes files
+            let retentionSec = retention * 24 * 60 * 60
+            let result = findRemoveSync(path.resolve(directory), { 
+                age: {seconds: retentionSec}, 
+                extensions: ['.json', '.html', '.csv', '.log']
+            })
+
+            // log
+            Object.keys(result).forEach(function(k){
+                if (result[k]) {
+                    logger.info('File ' + k + ' : deleted')
                 }
-              });
+            });
+
         }, null, true, 'Europe/Paris')
     }
 
     //--- Adds an automatic purge for YYYY/MM/DD directory structure -------------------------
     setTimeTreeRetention(directory, frequency, retention) {
         new CronJob(frequency, function() {
+
+            // infos
+            logger.info('Purge timetree directory (max ' + retention + ' days) : ' + directory)
 
             // folders to remove
             let rmFolders = []

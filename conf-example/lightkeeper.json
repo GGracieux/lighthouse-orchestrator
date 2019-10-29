@@ -15,11 +15,12 @@
     "webserver":{
         "enabled": true,
         "port": 8086,
-        "folders": ["reports", "logs", "tmp"],
+        "folders": ["reports", "logs", "tmp", "errors"],
         "searchable": true
     },
     "retention":{
-        "logs": "7",
-        "reports": "7"
+        "logs": 7,
+        "reports": 7,
+        "errors": 7
     }
 }

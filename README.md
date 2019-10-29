@@ -104,7 +104,8 @@ This file defines the general execution parameters of lighkeeper.
 - webserver.folders: list of data-dir subfolders to allow access to
 - webserver.searchable: if true, adds a /job?id=xxxx&format=yyyy route
 - retention.log : log files retention period in days
-- retention.reports : reports files retention period in days
+- retention.reports : report files retention period in days
+- retention.errors : error files retention period in days
 
 Configuration example :
 ```json
@@ -129,8 +130,9 @@ Configuration example :
         "searchable": true
     },
     "retention":{
-        "logs": "7",
-        "reports": "7"
+        "logs": 7,
+        "reports": 7,
+        "errors": 7
     }
 }
 ```

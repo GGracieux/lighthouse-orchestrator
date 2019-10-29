@@ -24,9 +24,9 @@ class Runner {
 
         // log rotator
         let rotator = new Rotator()
-        rotator.setFileRotationRetention(global.args.data_dir + '/logs/lightkeeper.log', '1 0 2 * * *', global.conf.retention.logs)
-        rotator.setFileRotationRetention(global.args.data_dir + '/logs/results.log', '1 0 2 * * *', global.conf.retention.logs)
-        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 0 2 * * *', global.conf.retention.reports)
+        rotator.setDirectoryRetention(global.args.data_dir + '/logs',   '1 1 2 * * *', global.conf.retention.logs)
+        rotator.setDirectoryRetention(global.args.data_dir + '/errors', '1 2 2 * * *', global.conf.retention.errors)
+        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 3 2 * * *', global.conf.retention.reports)
 
         // webserver
         if (global.conf.webserver.enabled) {
@@ -60,8 +60,7 @@ class Runner {
                 err => {
 
                     // log error
-                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url)
-                    logger.error(JSON.stringify(err))
+                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url + ' - see errors folder')
 
                     // clean error
                     this.cleanMess(err)
@@ -151,12 +150,16 @@ class Runner {
 
     //--- Clean failed test------------------------------
     cleanMess(err) {
+
+        // moves temporary files
         let tmpdir = path.resolve(global.args.data_dir + '/tmp/' + err.jobConf.id)
         let jobFiles = glob.sync(tmpdir+ '*')
         jobFiles.forEach(jobFile => {
-            console.log(jobFile)
-            fs.unlinkSync(jobFile)
+            fs.renameSync(jobFile, global.args.data_dir + '/errors/' + path.basename(jobFile))
         })
+
+        //log error trace
+        fs.writeFileSync(global.args.data_dir + '/errors/' + err.jobConf.id + '.error.json', JSON.stringify(err));
     }
 
 }
