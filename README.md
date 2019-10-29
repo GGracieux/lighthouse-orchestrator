@@ -1,6 +1,6 @@
-# Lighthouse-keeper
+# Lightkeeper - Lighthouse orchestrator
 
-Lighthouse-keeper is a simple lighthouse job orchestrator made with nodejs.
+Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 
 ## Usage
 
