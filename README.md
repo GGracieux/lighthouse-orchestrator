@@ -13,6 +13,10 @@ Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 ```bash
 npm install -g lighthouse
 ```
+- Install this package
+```bash
+npm install -g lighthouse-orchestrator
+```
 
 ### Execution
     
