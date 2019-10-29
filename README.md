@@ -150,7 +150,7 @@ Every data produced by lightkeeper is stored under the data-dir passed as comman
 According to lightkeeper.json, the data-dir folder can be exposed through http.
 
 ### /log/lightkeeper.log
-This is the application log, it monitors job activity, and errors. 
+This is the application log, it monitors job activity.
 Log example
 ```log
 2019-10-29T21:18:01.244Z|info|No test in queue, waiting ..
@@ -189,3 +189,6 @@ ls -l reports/2019/10/29/
 
 ### /tmp
 This folder contains the job queue and lighthouse reports before they are moved to /data/reports
+
+### /errors
+This folder contains details on error, temporary files, etc ...
