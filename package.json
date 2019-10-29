@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-orchestrator",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Lightkeeper : Lighthouse job orchestrator",
   "main": "index.js",
   "scripts": {
