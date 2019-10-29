@@ -5,14 +5,11 @@
     "logs":{
         "params":true,
         "fields":[
-            "fetchTime",
-            "requestedUrl",
-            "audits.first-contentful-paint.numericValue",
-            "audits.first-meaningful-paint.numericValue",
+            "categories.performance.score",
+            "audits.time-to-first-byte.numericValue",
             "audits.speed-index.numericValue",
-            "audits.first-cpu-idle.numericValue",
-            "audits.interactive.numericValue",
-            "audits.max-potential-fid.numericValue"
+            "audits.total-byte-weight.numericValue",
+            "audits.dom-size.numericValue"
         ]
     },
     "webserver":{

@@ -115,14 +115,11 @@ Configuration example :
     "logs":{
         "params":true,
         "fields":[
-            "fetchTime",
-            "requestedUrl",
-            "audits.first-contentful-paint.numericValue",
-            "audits.first-meaningful-paint.numericValue",
+            "categories.performance.score",
+            "audits.time-to-first-byte.numericValue",
             "audits.speed-index.numericValue",
-            "audits.first-cpu-idle.numericValue",
-            "audits.interactive.numericValue",
-            "audits.max-potential-fid.numericValue"
+            "audits.total-byte-weight.numericValue",
+            "audits.dom-size.numericValue"
         ]
     },
     "webserver":{
@@ -154,42 +151,39 @@ According to lightkeeper.json, the data-dir folder can be exposed through http.
 This is the application log, it monitors job activity, and errors. 
 Log example
 ```log
-2019-10-27T10:29:01.723Z|info|No test in queue, wainting ...
-2019-10-27T10:29:01.723Z|info|No test in queue, wainting ...
-2019-10-27T10:30:01.021Z|info|Job 1572258601021-891 : Adding (mobile) https://www.google.com
-2019-10-27T10:30:01.023Z|info|Job 1572258601023-594 : Adding (desktop) https://www.google.com
-2019-10-27T10:30:01.724Z|info|Job 1572258601021-891 : Launching : (mobile) https://www.google.com
-2019-10-27T10:30:11.971Z|info|Job 1572258601021-891 : Processing (mobile) https://www.google.com
-2019-10-27T10:30:11.979Z|info|Job 1572258601021-891 : Ending (mobile) https://www.google.com
-2019-10-27T10:30:11.979Z|info|Job 1572258601023-594 : Launching : (desktop) https://www.google.com
-2019-10-27T10:30:21.926Z|info|Job 1572258601023-594 : Processing (desktop) https://www.google.com
-2019-10-27T10:30:21.937Z|info|Job 1572258601023-594 : Ending (desktop) https://www.google.com
-2019-10-27T10:30:41.355Z|info|No test in queue, wainting ...
-2019-10-27T10:31:41.360Z|info|No test in queue, wainting ...
+2019-10-29T21:18:01.244Z|info|No test in queue, waiting ..
+2019-10-29T21:19:01.244Z|info|No test in queue, waiting ...
+2019-10-29T21:20:01.010Z|info|Job 1572384001010-705 : Adding (mobile) https://www.google.com
+2019-10-29T21:20:01.010Z|info|Job 1572384001010-895 : Adding (desktop) https://www.google.com
+2019-10-29T21:20:23.251Z|info|Job 1572384001010-705 : Launching : (mobile) https://www.google.com
+2019-10-29T21:20:32.985Z|info|Job 1572384001010-705 : Processing (mobile) https://www.google.com
+2019-10-29T21:20:32.988Z|info|Job 1572384001010-705 : Ending (mobile) https://www.google.com
+2019-10-29T21:20:32.988Z|info|Job 1572384001010-895 : Launching : (desktop) https://www.google.com
+2019-10-29T21:20:42.853Z|info|Job 1572384001010-895 : Processing (desktop) https://www.google.com
+2019-10-29T21:20:42.855Z|info|Job 1572384001010-895 : Ending (desktop) https://www.google.com
+2019-10-29T21:20:42.856Z|info|No test in queue, waiting ...
+2019-10-29T21:21:42.856Z|info|No test in queue, waiting ...
 ```
 ### /log/results.log
 This is the results log, it logs results according to lightkeeper.json configuration file
 Log example
 ```log
-1572258601021-891;https://www.google.com;mobile;2019-10-27T10:30:01.021Z;2019-10-28T10:30:02.854Z;1139.849;1139.849;1196.1174340012133;3068.889;3260.899;218
-1572258601023-594;https://www.google.com;desktop;2019-10-27T10:30:01.023Z;2019-10-28T10:30:13.085Z;308.812;319.812;423.8787076179145;592.44;673.316;58
+1572384001010-705;https://www.google.com;mobile;2019-10-29T21:20:01.010Z;0.97;116.51500000000001;1536.5892489842574;289790;411
+1572384001010-895;https://www.google.com;desktop;2019-10-29T21:20:01.010Z;1;117.94599999999997;499.14791362486005;406031;237
 ```
 
 ### /reports
 This folder contains a directory stucture as follow : /reports/YYYY/MM/DD/report-files.ext
 directory listing example 
 ```bash
-ls -l reports/2019/10/27/
-1572258601021-891-mobile-https:www.google.com.csv
-1572258601021-891-mobile-https:www.google.com.html
-1572258601021-891-mobile-https:www.google.com.json
-1572258601023-594-desktop-https:www.google.com.csv
-1572258601023-594-desktop-https:www.google.com.html
-1572258601023-594-desktop-https:www.google.com.json
+ls -l reports/2019/10/29/
+1572384001010-705-mobile-https:www.google.com.csv
+1572384001010-705-mobile-https:www.google.com.html
+1572384001010-705-mobile-https:www.google.com.json
+1572384001010-895-desktop-https:www.google.com.csv
+1572384001010-895-desktop-https:www.google.com.html
+1572384001010-895-desktop-https:www.google.com.json
 ```
 
 ### /tmp
 This folder contains the job queue and lighthouse reports before they are moved to /data/reports
-
-
-## Webserver
