@@ -65,7 +65,7 @@ docker-compose up
 ## Configuration
 
 All configuration files must be located under the config-dir passed as command argument.  
-For a quick start, you can copy the default config files from this package (/conf folder).
+For a quick start, you can copy the default config files from this package (/conf-example folder).
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -101,6 +101,8 @@ This file defines the general execution parameters of lighkeeper.
   - logs.fields : list of fields from lighthouse json report to writte as job resul
 - webserver.enabled : enables/disables data publishing on webserver
 - webserver.port : defines webserver port
+- retention.log : log files retention period in days
+- retention.reports : reports files retention period in days
 
 Configuration example :
 ```json
@@ -123,7 +125,11 @@ Configuration example :
     },
     "webserver":{
         "enabled": true,
-        "port": 80
+        "port": 8086
+    },
+    "retention":{
+        "logs": "7",
+        "reports": "7"
     }
 }
 ```
@@ -132,12 +138,13 @@ The profile.xxxxx.files are lighthouse configuration files. The xxxxx filename p
 
 You can add as many profile as you want based on [lighthouse configuration format](https://github.com/GoogleChrome/lighthouse/blob/HEAD/docs/configuration.md)
 
-Lightkeeper comes with two default profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
+Lightkeeper comes with two example profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
 
 
 ## Results
 
 Every data produced by lightkeeper is stored under the data-dir passed as command argument.
+According to lightkeeper.json, the data-dir folder can be exposed through http.
 
 ### /log/lightkeeper.log
 This is the application log, it monitors job activity, and errors. 

@@ -8,7 +8,7 @@
         {
             "url":"https://www.example.com",
             "profiles":[ "mobile", "desktop"],
-            "cron": "1 */10 * * * *"
+            "cron": "1 1 */1 * * *"
         }
     ]
 }
