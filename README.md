@@ -4,15 +4,11 @@ Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 
 ## Usage
 
+### Launch with CLI
+
 ### Prerequisites
 
-- Install Chrome
-```bash
-# add google to apt sources list
-curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-   && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-```
-
+- Install Chrome or Chromium
 - Install Lighthouse
 ```bash
 npm install -g lighthouse
@@ -23,11 +19,45 @@ npm install -g lighthouse
 ```bash
 ./lighthouse-keeper \
     --config-dir /your/config/dir \
-    --data-dir /your/result/dir \
+    --data-dir /your/result/dir
 ```
 Arguments : 
 - config-dir : Directory containing your config files. Default config files from this package are located under /conf. See below for configuration details.
 - data-dir : Directory for result storage, will be created if it does not exists. See below for results details.
+
+### Launch with Docker
+
+### Prerequisites
+
+- clone [lighthouse-orchestrator](https://github.com/GGracieux/lighthouse-orchestrator) repository
+```bash
+git clone git@github.com:GGracieux/lighthouse-orchestrator.git
+```
+- build dockerfile
+```bash
+docker build -t lightkeeper .
+```
+
+### Execution
+    
+- Create a docker-compose.yml specifying config-dir and data-dir folders (see below for configuration and results details). For example :
+```yml
+version: '3.2'
+services:
+  lightkeeper:
+    image: lightkeeper
+    volumes:
+      - /tmp/conf:/lightkeeper/conf:rw
+      - /tmp/data:/lightkeeper/data:rw
+    ports:
+      - 8086:80
+```
+
+
+- Launch 
+```bash
+docker-compose up
+```
 
 ## Configuration
 
