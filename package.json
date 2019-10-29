@@ -1,7 +1,7 @@
 {
-  "name": "lighthouse-keeper",
+  "name": "lighthouse-orchestrator",
   "version": "1.0.1",
-  "description": "Lighthouse job orchestrator",
+  "description": "Lightkeeper : Lighthouse job orchestrator",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
