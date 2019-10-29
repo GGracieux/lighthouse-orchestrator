@@ -42,8 +42,6 @@ git clone git@github.com:GGracieux/lighthouse-orchestrator.git
 docker build -t lightkeeper .
 ```
 
-### Execution
-    
 - Create a docker-compose.yml specifying config-dir and data-dir folders (see below for configuration and results details). For example :
 ```yml
 version: '3.2'
@@ -57,7 +55,8 @@ services:
       - 8086:80
 ```
 
-
+### Execution
+    
 - Launch 
 ```bash
 docker-compose up
