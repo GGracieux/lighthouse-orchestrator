@@ -13,6 +13,7 @@
   "author": "ggracieux@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "argparse": "^1.0.10",
     "cron": "^1.7.2",
     "express": "^4.17.1",
     "glob": "^7.1.5",

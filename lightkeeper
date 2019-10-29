@@ -1,18 +1,23 @@
 #!/usr/bin/env node
 
+// Handle lighthouse-keeper
+const ArgumentParser = require('./classes/ArgumentParser.js')
+let ap = new ArgumentParser()
+global.args = ap.parseArgs()
+
 // Loads lighthkeeper config
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-global.conf = JSON.parse(fs.readFileSync(__dirname + '/conf/lightkeeper.json', 'utf8'));
+global.conf = JSON.parse(fs.readFileSync(global.args.config_dir + '/lightkeeper.json', 'utf8'));
 
 // Creates data directory structure
-mkdirp.sync(__dirname + '/data/tmp')
-mkdirp.sync(__dirname + '/data/logs')
-mkdirp.sync(__dirname + '/data/reports')
+mkdirp.sync(global.args.data_dir + '/tmp')
+mkdirp.sync(global.args.data_dir + '/logs')
+mkdirp.sync(global.args.data_dir + '/reports')
 
 // Creates global logger
 const Logger = require('./classes/Logger.js')
-global.logger = new Logger(__dirname + '/data/logs/lightkeeper.log', true)
+global.logger = new Logger(global.args.data_dir + '/logs/lightkeeper.log', true)
 
 // Creates and launch runner
 const Runner = require('./classes/Runner.js')

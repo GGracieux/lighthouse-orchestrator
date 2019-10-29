@@ -12,7 +12,7 @@ class QueueManager {
 
     //--- Starts job auto enqueuing  ------------------------------
     setAutoReloadOnConfigChange() {
-        fs.watchFile(__dirname + '/../conf/jobs.json', (curr, prev) => {
+        fs.watchFile(global.args.config_dir + '/jobs.json', (curr, prev) => {
             logger.info('Job conf changed, reloading')
             this.startEnqueuer()
         });
@@ -25,7 +25,7 @@ class QueueManager {
         this.stopEnqueuer()
 
         // reads job file
-        var jobFile = JSON.parse(fs.readFileSync(__dirname + '/../conf/jobs.json', 'utf8'));
+        var jobFile = JSON.parse(fs.readFileSync(global.args.config_dir + '/jobs.json', 'utf8'));
 
         // creates cron jobs
         jobFile.jobs.forEach(job => {
@@ -51,7 +51,7 @@ class QueueManager {
                     logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)
 
                     // writes job run file
-                    fs.writeFileSync(__dirname + '/../data/tmp/' + jobId + '.run.json', runStr, 'utf8')
+                    fs.writeFileSync(global.args.data_dir + '/tmp/' + jobId + '.run.json', runStr, 'utf8')
 
                 })
 
@@ -71,7 +71,7 @@ class QueueManager {
     getJobIdsToRun() {
 
         // list all files in tmp
-        let files = fs.readdirSync(__dirname + '/../data/tmp/') 
+        let files = fs.readdirSync(global.args.data_dir + '/tmp/')
 
         // split .runs and .report files
         var runs = []
@@ -109,15 +109,15 @@ class QueueManager {
 
     //--- Remove specific job from queue -------------------------------------
     removeJob(jobId) {
-        let runFilePath = __dirname + '/../data/tmp/' + jobId + '.run.json'
+        let runFilePath = global.args.data_dir + '/tmp/' + jobId + '.run.json'
         fs.unlinkSync(runFilePath)
     }
 
     //--- Remove everything from queue ------------------------------
     emptyQueue() {
-        let files = fs.readdirSync(__dirname + '/../data/tmp/')
+        let files = fs.readdirSync(global.args.data_dir + '/tmp/')
         for (const file of files) {
-            fs.unlinkSync(path.join(__dirname + '/../data/tmp/', file))
+            fs.unlinkSync(path.join(global.args.data_dir + '/tmp/', file))
         }
     }
 

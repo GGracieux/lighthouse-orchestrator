@@ -24,14 +24,14 @@ class Runner {
 
         // log rotator
         let rotator = new Rotator()
-        rotator.setFileRotationRetention(__dirname + '/../data/logs/lightkeeper.log', '1 0 2 * * *', global.conf.retention.logs)
-        rotator.setFileRotationRetention(__dirname + '/../data/logs/results.log', '1 0 2 * * *', global.conf.retention.logs)
-        rotator.setTimeTreeRetention(__dirname + '/../data/reports', '1 0 2 * * *', global.conf.retention.reports)
+        rotator.setFileRotationRetention(global.args.data_dir + '/logs/lightkeeper.log', '1 0 2 * * *', global.conf.retention.logs)
+        rotator.setFileRotationRetention(global.args.data_dir + '/logs/results.log', '1 0 2 * * *', global.conf.retention.logs)
+        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 0 2 * * *', global.conf.retention.reports)
 
         // webserver
         if (global.conf.webserver.enabled) {
             let webserver = new Webserver()
-            webserver.start(__dirname + '/../data', global.conf.webserver.port)
+            webserver.start(global.args.data_dir, global.conf.webserver.port)
         }
     }
 
@@ -41,7 +41,7 @@ class Runner {
         let jobs = this.qm.getJobIdsToRun()
         if (jobs.length > 0) {
           
-            let jobConf = JSON.parse(fs.readFileSync(__dirname + '/../data/tmp/'+ jobs[0] + '.run.json', 'utf8'));
+            let jobConf = JSON.parse(fs.readFileSync(global.args.data_dir + '/tmp/'+ jobs[0] + '.run.json', 'utf8'));
 
             this.lighthouse.runJob(jobConf).then(
                 jobResult => {
@@ -98,7 +98,7 @@ class Runner {
     logResults(jobResult) {
     
         // reads report.json
-        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobConf.id + '.report'
+        let reportPath = global.args.data_dir + '/tmp/' + jobResult.jobConf.id + '.report'
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // extracting data
@@ -121,7 +121,7 @@ class Runner {
         })
 
         // writing result to log
-        fs.appendFile(__dirname + '/../data/logs/results.log', line+"\n", function(err) {
+        fs.appendFile(global.args.data_dir + '/logs/results.log', line+"\n", function(err) {
             if(err) {
                 return console.log(err);
             }
@@ -134,11 +134,11 @@ class Runner {
         // creating directory structure for report storage
         let d = new Date()
         let datePart = d.getFullYear() + '/' + (d.getMonth()+1).toString().padStart(2,0) + '/' + d.getDate().toString().padStart(2,0)
-        let archiveDir = __dirname + '/../data/reports/' + datePart + '/'
+        let archiveDir = global.args.data_dir + '/reports/' + datePart + '/'
         mkdirp.sync(archiveDir)
 
         // moving reports
-        let reportPath = __dirname + '/../data/tmp/' + jobResult.jobConf.id + '.report'
+        let reportPath = global.args.data_dir + '/tmp/' + jobResult.jobConf.id + '.report'
         global.conf["reports"]["formats"].forEach(format => {
             fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobConf.id + '-' + jobResult.jobConf.profile + '-' + slugify(jobResult.jobConf.url).substring(0, 100) + '.' + format)
         });
@@ -151,7 +151,7 @@ class Runner {
 
     //--- Clean failed test------------------------------
     cleanMess(err) {
-        let tmpdir = path.resolve(__dirname + '/../data/tmp/' + err.jobConf.id)
+        let tmpdir = path.resolve(global.args.data_dir + '/tmp/' + err.jobConf.id)
         let jobFiles = glob.sync(tmpdir+ '*')
         jobFiles.forEach(jobFile => {
             console.log(jobFile)
