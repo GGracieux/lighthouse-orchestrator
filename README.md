@@ -101,6 +101,8 @@ This file defines the general execution parameters of lighkeeper.
   - logs.fields : list of fields from lighthouse json report to writte as job resul
 - webserver.enabled : enables/disables data publishing on webserver
 - webserver.port : defines webserver port
+- webserver.folders: list of data-dir subfolders to allow access to
+- webserver.searchable: if true, adds a /job?id=xxxx&format=yyyy route
 - retention.log : log files retention period in days
 - retention.reports : reports files retention period in days
 
@@ -125,7 +127,9 @@ Configuration example :
     },
     "webserver":{
         "enabled": true,
-        "port": 8086
+        "port": 8086,
+        "folders": ["reports", "logs", "tmp"],
+        "searchable": true
     },
     "retention":{
         "logs": "7",
@@ -186,3 +190,6 @@ ls -l reports/2019/10/27/
 
 ### /tmp
 This folder contains the job queue and lighthouse reports before they are moved to /data/reports
+
+
+## Webserver

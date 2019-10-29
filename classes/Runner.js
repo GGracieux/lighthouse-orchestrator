@@ -31,7 +31,7 @@ class Runner {
         // webserver
         if (global.conf.webserver.enabled) {
             let webserver = new Webserver()
-            webserver.start(global.args.data_dir, global.conf.webserver.port)
+            webserver.start(global.conf.webserver.port)
         }
     }
 

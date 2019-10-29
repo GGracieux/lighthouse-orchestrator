@@ -17,7 +17,9 @@
     },
     "webserver":{
         "enabled": true,
-        "port": 8086
+        "port": 8086,
+        "folders": ["reports", "logs", "tmp"],
+        "searchable": true
     },
     "retention":{
         "logs": "7",
