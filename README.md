@@ -1,14 +1,38 @@
-# Lightkeeper
+# Lighthouse-keeper
 
-Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
-- Configure with json files under /conf
-- Launch with lightkeeper executable file under /
-- Get job results under /data or through http://localhost
+Lighthouse-keeper is a simple lighthouse job orchestrator made with nodejs.
 
+## Usage
+
+### Prerequisites
+
+- Install Chrome
+```bash
+# add google to apt sources list
+curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+   && echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+```
+
+- Install Lighthouse
+```bash
+npm install -g lighthouse
+```
+
+### Execution
+    
+```bash
+./lighthouse-keeper \
+    --config-dir /your/config/dir \
+    --data-dir /your/result/dir \
+```
+Arguments : 
+- config-dir : Directory containing your config files. Default config files from this package are located under /conf. See below for configuration details.
+- data-dir : Directory for result storage, will be created if it does not exists. See below for results details.
 
 ## Configuration
 
-All configuration files are located under /conf :
+All configuration files must be located under the config-dir passed as command argument.  
+For a quick start, you can copy the default config files from this package (/conf folder).
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -78,35 +102,11 @@ You can add as many profile as you want based on [lighthouse configuration forma
 Lightkeeper comes with two default profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
 
 
-## Launch
-
-To launch lightkeeper locally
-    ```bash
-    # Prerequisites n°1 - Install lighthouse
-    npm install -g lighthouse
-
-    # Prerequisites n°2 - Install npm dependencies
-    npm install
-
-    # Run lighthouse
-    ./lighthouse
-    ```
-
-To launch lightkeeper with docker
-    ```bash
-
-    #  Prerequisites n°1 - Build docker image
-    docker-compose buid
-
-    # Run image
-    docker-compose up
-    ```
-
 ## Results
 
-Every data produced by lightkeeper is stored under /data
+Every data produced by lightkeeper is stored under the data-dir passed as command argument.
 
-### /data/log/lightkeeper.log
+### /log/lightkeeper.log
 This is the application log, it monitors job activity, and errors. 
 Log example
 ```log
@@ -123,7 +123,7 @@ Log example
 2019-10-27T10:30:41.355Z|info|No test in queue, wainting ...
 2019-10-27T10:31:41.360Z|info|No test in queue, wainting ...
 ```
-### /data/log/results.log
+### /log/results.log
 This is the results log, it logs results according to lightkeeper.json configuration file
 Log example
 ```log
@@ -131,7 +131,7 @@ Log example
 1572258601023-594;https://www.google.com;desktop;2019-10-27T10:30:01.023Z;2019-10-28T10:30:13.085Z;308.812;319.812;423.8787076179145;592.44;673.316;58
 ```
 
-### /data/reports
+### /reports
 This folder contains a directory stucture as follow : /reports/YYYY/MM/DD/report-files.ext
 directory listing example 
 ```bash
