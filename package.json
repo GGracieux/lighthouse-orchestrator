@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/GGracieux/lighthouse-keeper.git"
   },
+  "bin": {
+    "lightkeeper": "./lightkeeper"
+  },
   "author": "ggracieux@gmail.com",
   "license": "ISC",
   "dependencies": {
