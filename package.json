@@ -19,6 +19,7 @@
     "argparse": "^1.0.10",
     "cron": "^1.7.2",
     "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
     "glob": "^7.1.5",
     "log-rotate": "^0.2.8",
     "mkdirp": "^0.5.1",

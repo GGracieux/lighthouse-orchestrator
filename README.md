@@ -103,6 +103,7 @@ This file defines the general execution parameters of lighkeeper.
 - webserver.port : defines webserver port
 - webserver.folders: list of data-dir subfolders to allow access to
 - webserver.searchable: if true, adds a /job?id=xxxx&format=yyyy route
+- webserver.users : a list of user for webserver basic auth, if not provided access is publicc.
 - retention.log : log files retention period in days
 - retention.reports : report files retention period in days
 - retention.errors : error files retention period in days
@@ -127,7 +128,11 @@ Configuration example :
         "enabled": true,
         "port": 8086,
         "folders": ["reports", "logs", "tmp"],
-        "searchable": true
+        "searchable": true,
+        "users": {
+            "alice": "123456",
+            "bob": "abcdef"
+        }
     },
     "retention":{
         "logs": 7,
