@@ -3,10 +3,29 @@ const rotate = require('log-rotate')
 const path = require('path')
 const rimraf = require('rimraf')
 const CronJob = require('cron').CronJob;
-const findRemoveSync = require('find-remove')
 
 
 class Rotator {
+
+    //--- Adds an automatic rotation for specified file -------------------------------------
+    setFileRotation(file, frequency, retention) {
+        new CronJob(frequency, function() {
+
+            // info
+            let fname = path.basename(file)
+            logger.info('File rotation : ' + fname)
+
+            // rotation
+            rotate(path.resolve(file), {count: retention }, function(err) {
+                if (err !== null) {
+                    logger.warn('File ' + fname + ' : rotation error : ' + err)
+                } else {
+                    logger.info('File ' + fname + ' : rotation OK')
+                }
+              });
+
+        }, null, true)
+    }
 
     //--- Adds an automatic purge for specified directory -------------------------------------
     setDirectoryRetention(directory, frequency, retention) {
@@ -15,21 +34,31 @@ class Rotator {
             // info
             logger.info('Purge directory (max ' + retention + ' days) : ' + directory)
 
-            // removes files
-            let retentionSec = retention * 24 * 60 * 60
-            let result = findRemoveSync(path.resolve(directory), { 
-                age: {seconds: retentionSec}, 
-                extensions: ['.json', '.html', '.csv', '.log']
-            })
+            // calc min timestamp
+            let currTs = Date.now()
+            let minTs = currTs - (retention * 24 * 60 * 60 * 1000)
 
-            // log
-            Object.keys(result).forEach(function(k){
-                if (result[k]) {
-                    logger.info('File ' + k + ' : deleted')
-                }
+            // list files
+            let files = fs.readdirSync(directory)
+            files.forEach(file => {
+
+                // gets ctime
+                let fname = path.resolve(directory) + '/' + file
+                let fstats = fs.statSync(fname)
+
+                // delete old files
+                if (fstats.ctimeMs < minTs ) {
+                    fs.unlink(fname, (err) => {
+                        if (err) {
+                            logger.warn('File ' + file + ' : unable to delete : ' + err)
+                        } else {
+                            logger.info('File ' + file + ' : deletion OK')
+                        }
+                    });
+                };
             });
 
-        }, null, true, 'Europe/Paris')
+        }, null, true)
     }
 
     //--- Adds an automatic purge for YYYY/MM/DD directory structure -------------------------
@@ -83,7 +112,7 @@ class Rotator {
                 })
             })
 
-        }, null, true, 'Europe/Paris')
+        }, null, true)
     }
 }
 

@@ -55,7 +55,7 @@ class QueueManager {
 
                 })
 
-            }, null, true, 'Europe/Paris'));
+            }, null, true));
         });
     }
 
