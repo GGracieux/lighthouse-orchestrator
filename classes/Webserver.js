@@ -1,4 +1,5 @@
 var express = require('express')
+var basicAuth = require('express-basic-auth')
 var serveIndex = require('serve-index');
 var glob = require('glob')
 var path = require('path')
@@ -8,8 +9,14 @@ class Webserver {
     //--- Initialisation ------------------------------
     constructor() {
 
-        // adds static directories
         this.app = express()
+
+        // adds basic auth
+        if (global.conf.webserver.hasOwnProperty('users')) {
+            this.addBasicAuth()
+        }
+
+        // adds static directories
         global.conf.webserver.folders.forEach( folder => {
             this.addStaticDirectory('/' + folder, global.args.data_dir + '/' + folder )
         })
@@ -21,6 +28,15 @@ class Webserver {
 
         // adds homepage
         this.addHomePage()
+
+    }
+
+    //--- Adds basic auth to webserver access
+    addBasicAuth() {
+        this.app.use(basicAuth({
+            users: global.conf.webserver.users,
+            challenge: true
+        }))
     }
 
     //--- Adds a static directory

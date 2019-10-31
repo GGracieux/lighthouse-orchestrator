@@ -16,7 +16,11 @@
         "enabled": true,
         "port": 8086,
         "folders": ["reports", "logs", "tmp", "errors"],
-        "searchable": true
+        "searchable": true,
+        "users": {
+            "alice": "123456",
+            "bob": "abcdef"
+        }
     },
     "retention":{
         "logs": 7,
