@@ -101,8 +101,8 @@ This file defines the general execution parameters of lighkeeper.
 - reports.retention-days : number of days reports should be kept.
 
 #### logs
-- logs.lightkeeper.retention-days : number of days /log/lighthkeeper.log rotated file should be kept.
-- logs.results.fields : defines all the fields to output to /log/results.log
+- logs.lightkeeper.retention-days : number of days /logs/lighthkeeper.log rotated file should be kept.
+- logs.results.fields : defines all the fields to output to /logs/results.log
   - run : run related fields : Values can be
     - id : the job id
     - url : tested url (as configured in jobs.json)
@@ -110,18 +110,19 @@ This file defines the general execution parameters of lighkeeper.
     - qdate : date of job enqueuing
     - any custom field added in jobs.json
   - lighthouse : list of fields from lighthouse json report
-- logs.results.retention-days : number of days /log/results.log rotated file should be kept.
-- logs.errors.retention-days : number of days files located under /error should be kept.
+- logs.results.retention-days : number of days /logs/results.log rotated file should be kept.
+- logs.errors.retention-days : number of days files located under /logs/errors should be kept.
 
 #### webserver
 - webserver.enabled : enables/disables data publishing on webserver
 - webserver.port : defines webserver port
-- webserver.folders: list of data-dir subfolders to allow access to
-- webserver.searchable: if true, adds a /job?id=xxxx&format=yyyy route
-- webserver.users : a list of user for webserver basic auth, if not provided access is publicc.
-- retention.log : log files retention period in days
-- retention.reports : report files retention period in days
-- retention.errors : error files retention period in days
+- webserver.content.folders: list of data-dir subfolders to allow access to
+- webserver.content.searchable: if true, adds a /job?id=xxxx&format=yyyy route
+- webserver.authentication.enabled : enables/disables basic authentication
+- webserver.authentication.users : a list of user for webserver basic auth, if not provided access is public.
+- webserver.https.enabled : enables/disables https
+- webserver.https.certificate.key: certificate key path, relative to config-dir
+- webserver.https.certificate.crt: certificate path, relative to config-dir
 
 Configuration example :
 ```json
@@ -161,11 +162,23 @@ Configuration example :
     "webserver":{
         "enabled": true,
         "port": 8086,
-        "folders": ["reports", "logs", "tmp", "errors"],
-        "searchable": true,
-        "users": {
-            "alice": "123456",
-            "bob": "abcdef"
+        "content": {
+            "folders": ["reports", "logs", "tmp"],
+            "searchable": true
+        },
+        "authentication": {
+            "enabled": true,
+            "users": {
+                "alice": "123456",
+                "bob": "abcdef"
+            }
+        },
+        "https":{
+            "enabled": false,
+            "certificate": {
+                "key":"your-certificate.key",
+                "crt":"your-certificate.crt"
+            }
         }
     }
 }
@@ -183,7 +196,7 @@ Lightkeeper comes with two example profiles, mobile and desktop, they are identi
 Every data produced by lightkeeper is stored under the data-dir passed as command argument.
 According to lightkeeper.json, the data-dir folder can be exposed through http.
 
-### /log/lightkeeper.log
+### /logs/lightkeeper.log
 This is the application log, it monitors job activity.
 Log example
 ```log
@@ -200,13 +213,15 @@ Log example
 2019-10-29T21:20:42.856Z|info|No test in queue, waiting ...
 2019-10-29T21:21:42.856Z|info|No test in queue, waiting ...
 ```
-### /log/results.log
+### /logs/results.log
 This is the results log, it logs results according to lightkeeper.json configuration file
 Log example
 ```log
 1572384001010-705;https://www.google.com;mobile;2019-10-29T21:20:01.010Z;0.97;116.51500000000001;1536.5892489842574;289790;411
 1572384001010-895;https://www.google.com;desktop;2019-10-29T21:20:01.010Z;1;117.94599999999997;499.14791362486005;406031;237
 ```
+### /logs/errors/
+This folder contains details on errors, temporary files, etc ...
 
 ### /reports
 This folder contains a directory stucture as follow : /reports/YYYY/MM/DD/report-files.ext
@@ -223,6 +238,3 @@ ls -l reports/2019/10/29/
 
 ### /tmp
 This folder contains the job queue and lighthouse reports before they are moved to /data/reports
-
-### /errors
-This folder contains details on error, temporary files, etc ...

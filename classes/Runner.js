@@ -26,7 +26,7 @@ class Runner {
         let rotator = new Rotator()
         rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.logs.lightkeeper["retention-days"])
         rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.logs.results["retention-days"])
-        rotator.setDirectoryRetention(global.args.data_dir + '/errors', '1 2 2 * * *', global.conf.logs.errors["retention-days"])
+        rotator.setDirectoryRetention(global.args.data_dir + '/logs/errors', '1 2 2 * * *', global.conf.logs.errors["retention-days"])
         rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.reports["retention-days"])
 
         // webserver
@@ -61,7 +61,7 @@ class Runner {
                 err => {
 
                     // log error
-                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url + ' - see errors folder')
+                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url + ' - see /logs/errors folder')
 
                     // clean error
                     this.cleanMess(err)
@@ -165,11 +165,11 @@ class Runner {
         let tmpdir = path.resolve(global.args.data_dir + '/tmp/' + err.jobConf.id)
         let jobFiles = glob.sync(tmpdir+ '*')
         jobFiles.forEach(jobFile => {
-            fs.renameSync(jobFile, global.args.data_dir + '/errors/' + path.basename(jobFile))
+            fs.renameSync(jobFile, global.args.data_dir + '/logs/errors/' + path.basename(jobFile))
         })
 
         //log error trace
-        fs.writeFileSync(global.args.data_dir + '/errors/' + err.jobConf.id + '.error.json', JSON.stringify(err));
+        fs.writeFileSync(global.args.data_dir + '/logs/errors/' + err.jobConf.id + '.error.json', JSON.stringify(err));
     }
 
 }

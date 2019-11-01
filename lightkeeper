@@ -13,8 +13,8 @@ global.conf = JSON.parse(fs.readFileSync(global.args.config_dir + '/lightkeeper.
 // Creates data directory structure
 mkdirp.sync(global.args.data_dir + '/tmp')
 mkdirp.sync(global.args.data_dir + '/logs')
+mkdirp.sync(global.args.data_dir + '/logs/errors')
 mkdirp.sync(global.args.data_dir + '/reports')
-mkdirp.sync(global.args.data_dir + '/errors')
 
 // Creates global logger
 const Logger = require('./classes/Logger.js')
