@@ -1,6 +1,6 @@
 {
     "reports":{
-        "formats": ["html", "json", "csv"],
+        "formats": ["html"],
         "retentionDays": 7
     },
 
