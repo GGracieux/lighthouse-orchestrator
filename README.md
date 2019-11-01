@@ -1,12 +1,16 @@
 # Lightkeeper - Lighthouse orchestrator
 
 Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
+- Generates lighthouse audits against a list of url with selected profile (mobile or desktop) at specified frequency.
+- Stores generated reports until specified retention period limit
+- Extracts results data from reports and stores selected values to results.log
+- Embeded webserver allows to access reports and logs (https and basic-auth )
 
-## Usage
+## How to use it ?
 
-### Launch with CLI
+### Run with CLI
 
-### Prerequisites
+#### Prerequisites
 
 - Install Chrome or Chromium
 - Install Lighthouse
@@ -18,28 +22,35 @@ npm install -g lighthouse
 npm install -g lighthouse-orchestrator
 ```
 
-### Execution
+#### Run
     
 ```bash
-./lighthouse-keeper \
-    --config-dir /your/config/dir \
-    --data-dir /your/result/dir
+# generate default configuration
+./lightkeeper --init-config
+
+# run it
+./lightkeeper
 ```
 
-#### config-dir
-Directory containing your config files, argument defaults to ./conf.
-Lightkeeper comes with default configuration files (see /default-conf/jobs.json).
-First, defaults files are loaded, then if custom files are found they are overloaded.
-See below for configuration details.
+Available arguments :
 
-#### data-dir
-Directory for output storage, argument defaults to ./data.
-Folder will be created if it does not exists.
-See below for output details.
+- --config-dir : 
+    Directory containing your config files, default is current directory.
+    See below for configuration details.
 
-### Launch with Docker
+- --data-dir :
+    Directory for output storage, defaults to ./data.
+    See below for output details.
 
-### Prerequisites
+- --init-config :
+    Writes default configuration to "config-dir" path so you can adapt them to your needs.
+
+- --init-profiles :
+    Writes default lighthouse profiles to "config-dir" path so you can adapt them to your needs.
+
+### Run with Docker
+
+#### Prerequisites
 
 - clone [lighthouse-orchestrator](https://github.com/GGracieux/lighthouse-orchestrator) repository
 ```bash
@@ -63,7 +74,7 @@ services:
       - 8086:80
 ```
 
-### Execution
+#### Execution
     
 - Launch 
 ```bash
