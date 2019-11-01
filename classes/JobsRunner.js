@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp');
 const slugify = require('slugify')
 const glob = require("glob")
 
-class JobRunner {
+class JobsRunner {
 
     //--- Initialisation ------------------------------
     constructor() {
@@ -160,4 +160,4 @@ class JobRunner {
 
 }
 
-module.exports = JobRunner
+module.exports = JobsRunner

@@ -1,10 +1,12 @@
 const ArgumentParser = require('./ArgumentParser.js')
 const Configuration = require('./Configuration.js')
-const Webserver = require('./Webserver.js')
-const Rotator = require('./Rotator.js')
+const fs = require('fs')
+const JobsRunner = require('./JobsRunner.js')
 const Logger = require('./Logger.js')
 const mkdirp = require('mkdirp');
-const JobsRunner = require('./JobsRunner.js')
+const Rotator = require('./Rotator.js')
+const Webserver = require('./Webserver.js')
+
 
 class Launcher
 {
@@ -18,6 +20,7 @@ class Launcher
         global.logger = new Logger(global.args.data_dir + '/logs/lightkeeper.log', true)
         global.jobChoice = require('semaphore')(1);
         this.initDataDirectory()
+        this.initConfigFiles()
         
         // Let's get to work
         this.startPurgeAuto()
@@ -31,6 +34,21 @@ class Launcher
         mkdirp.sync(global.args.data_dir + '/logs')
         mkdirp.sync(global.args.data_dir + '/logs/errors')
         mkdirp.sync(global.args.data_dir + '/reports')
+    }
+
+    //--- Initialize config_dir files with default if asked to -----------
+    initConfigFiles() {
+        if (global.args.init_config || global.args.init_profiles) {
+            if (!fs.existsSync(global.args.config_dir)) {
+                mkdirp.sync(global.args.config_dir)
+            }
+            if (global.args.init_config) {
+                new Configuration().initConfig()
+            }
+            if (global.args.init_profiles) {
+                new Configuration().initProfiles()
+            }
+        }
     }
 
     //--- Starts Purge auto and file rotation ------------------------------

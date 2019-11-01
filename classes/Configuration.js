@@ -34,6 +34,17 @@ class Configuration
         return fs.existsSync(customPath) ? customPath : defaultPath
     }
 
+    //--- Copy default configuration to config-dir ------------------------------
+    initConfig() {
+        fs.copyFileSync(__dirname + '/../default-conf/lightkeeper.json', global.args.config_dir + '/lightkeeper.json')
+        fs.copyFileSync(__dirname + '/../default-conf/jobs.json', global.args.config_dir + '/jobs.json')
+    }
+
+    //--- Copy default configuration to config-dir ------------------------------
+    initProfiles() {
+        fs.copyFileSync(__dirname + '/../default-conf/profile.desktop.json', global.args.config_dir + '/profile.desktop.json')
+        fs.copyFileSync(__dirname + '/../default-conf/profile.mobile.json', global.args.config_dir + '/profile.mobile.json')
+    }
 }
 
 module.exports = Configuration
