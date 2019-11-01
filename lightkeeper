@@ -6,11 +6,11 @@ let ap = new ArgumentParser()
 global.args = ap.parseArgs()
 
 // Loads lighthkeeper config
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-global.conf = JSON.parse(fs.readFileSync(global.args.config_dir + '/lightkeeper.json', 'utf8'));
+const Configuration = require('./classes/Configuration.js')
+global.conf = new Configuration().load()
 
 // Creates data directory structure
+const mkdirp = require('mkdirp');
 mkdirp.sync(global.args.data_dir + '/tmp')
 mkdirp.sync(global.args.data_dir + '/logs')
 mkdirp.sync(global.args.data_dir + '/logs/errors')

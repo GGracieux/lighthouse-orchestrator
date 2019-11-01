@@ -2,17 +2,19 @@
 const fs = require('fs');
 const path = require('path');
 var CronJob = require('cron').CronJob;
+const Configuration = require('./Configuration.js')
 
 class QueueManager {
 
     //--- Initialisation ------------------------------
     constructor() {
         this.cronjobs = []
+        this.config = new Configuration()
     }
 
     //--- Starts job auto enqueuing  ------------------------------
     setAutoReloadOnConfigChange() {
-        fs.watchFile(global.args.config_dir + '/jobs.json', (curr, prev) => {
+        fs.watchFile(this.config.getJobsPath(), (curr, prev) => {
             logger.info('Job conf changed, reloading')
             this.startEnqueuer()
         });
@@ -25,7 +27,7 @@ class QueueManager {
         this.stopEnqueuer()
 
         // reads job file
-        var jobFile = JSON.parse(fs.readFileSync(global.args.config_dir + '/jobs.json', 'utf8'));
+        var jobFile = JSON.parse(fs.readFileSync(this.config.getJobsPath(), 'utf8'));
 
         // creates cron jobs
         jobFile.jobs.forEach(job => {

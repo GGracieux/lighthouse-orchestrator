@@ -1,5 +1,6 @@
 // Dependencies
 const fs = require('fs');
+const Configuration = require('./Configuration.js')
 
 class Lighthouse {
 
@@ -11,7 +12,7 @@ class Lighthouse {
         let cmd  = 'lighthouse ' + jobConf.url
         cmd += ' --output-path ' + global.args.data_dir + '/tmp/' + jobConf.id
         cmd += ' --chrome-flags="--headless --no-sandbox --ignore-certificate-errors"'
-        cmd += ' --config-path ' + global.args.config_dir + '/profile.' + jobConf.profile + '.json'
+        cmd += ' --config-path ' + new Configuration().getProfilePath(jobConf.profile)
 
         // setting log format
         global.conf["reports"]["formats"].forEach(format => {

@@ -19,11 +19,13 @@ class ArgumentParser
         // Add arguments
         this.parser.addArgument([ '--config-dir' ],{ 
             help: 'configuration directory',
-            required: true
+            defaultValue: "./conf",
+            required: false
         });
         this.parser.addArgument([ '--data-dir' ],{ 
             help: 'data directory',
-            required: true
+            defaultValue: "./data",
+            required: false
         });
     }
 

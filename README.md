@@ -25,9 +25,17 @@ npm install -g lighthouse-orchestrator
     --config-dir /your/config/dir \
     --data-dir /your/result/dir
 ```
-Arguments : 
-- config-dir : Directory containing your config files. Default config files from this package are located under /conf. See below for configuration details.
-- data-dir : Directory for output storage, will be created if it does not exists. See below for output details.
+
+#### config-dir
+Directory containing your config files, argument defaults to ./conf.
+Lightkeeper comes with default configuration files (see /default-conf/jobs.json).
+First, defaults files are loaded, then if custom files are found they are overloaded.
+See below for configuration details.
+
+#### data-dir
+Directory for output storage, argument defaults to ./data.
+Folder will be created if it does not exists.
+See below for output details.
 
 ### Launch with Docker
 
@@ -65,7 +73,6 @@ docker-compose up
 ## Configuration
 
 All configuration files must be located under the config-dir passed as command argument.  
-For a quick start, you can copy the default config files from this package (/conf-example folder).
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -73,28 +80,29 @@ This file defines the jobs to run with lighthouse. Each job must specify the fol
 - profiles : the list of profiles to run the test with, see below for profile configuration
 - cron : the frequency at wich test should be run. Notation is like cron with seconds granularity.
 
-The config file below runs 
-- https://www.google.com with mobile configuration every 10 minutes
-- https://www.example.com with mobile and desktop configuration every hour
+Additional properties can be added, they can be writent to result log according to result log configuration.
+
+If your config-dir does not have a jobs.json file, lightkeeper uses it's default (see /default-conf/jobs.json)
+
+For example the following jobs.json file runs :
+- https://www.example.com with mobile configuration every 30 minutes
+- https://www.google.com with mobile and desktop configuration every hour
 ```json
-{
-    "jobs": [
-        {
-            "url":"https://www.google.com",
-            "profiles":[ "mobile" ],
-            "cron": "1 */10 * * * *"
-        },
         {
             "url":"https://www.example.com",
+            "profiles":[ "mobile"],
+            "cron": "1 */30 * * * *"
+        },
+        {
+            "url":"https://www.google.com",
             "profiles":[ "mobile", "desktop"],
             "cron": "1 1 */1 * * *"
         }
-    ]
-}
 ```
 
 ### lightkeeper.json
 This file defines the general execution parameters of lighkeeper.
+Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json) and then overloads it with your custom lightkeeper.json file located under config-dir folder.
 
 #### reports
 - reports.formats: lighthouse generated reports format
@@ -184,11 +192,14 @@ Configuration example :
 }
 ```
 ### profile.xxxxx.json
-The profile.xxxxx.files are lighthouse configuration files. The xxxxx filename part defines the profile name which you can use in jobs.json.
+The profile.xxxxx.json files are lighthouse configuration files. The xxxxx filename part defines the profile name which you can use in jobs.json.
 
 You can add as many profile as you want based on [lighthouse configuration format](https://github.com/GoogleChrome/lighthouse/blob/HEAD/docs/configuration.md)
 
-Lightkeeper comes with two example profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
+Lightkeeper comes with two default profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
+
+You can add new profiles by writing profile.xxxx.json files under config-dir.
+You can overwrite default mobile and desktop files by writing profile.mobile.json and profile.desktop.json under config-dir.
 
 
 ## Output

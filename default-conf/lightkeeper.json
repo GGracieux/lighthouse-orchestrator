@@ -39,7 +39,7 @@
             "searchable": true
         },
         "authentication": {
-            "enabled": true,
+            "enabled": false,
             "users": {
                 "alice": "123456",
                 "bob": "abcdef"
