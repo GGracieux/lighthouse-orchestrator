@@ -1,0 +1,10 @@
+{
+    "webserver":{
+        "enabled": true,
+        "port": 8090,
+        "content": {
+            "folders": ["reports"],
+            "searchable": true
+        }
+    }
+}

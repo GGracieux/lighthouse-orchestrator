@@ -1,0 +1,18 @@
+{
+    "logs":{
+        "results":{
+            "fields":{
+                "run":[
+                    "qdate",
+                    "url",
+                    "profile",
+                    "category"
+                ],
+                "lighthouse":[
+                    "audits.time-to-first-byte.numericValue",
+                    "audits.speed-index.numericValue"
+                ]
+            }
+        }
+    }
+}

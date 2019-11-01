@@ -1,0 +1,28 @@
+{
+    "jobs": [
+        {
+            "url":"https://www.google.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "*/45 * * * * *",
+            "description": "Every 45 seconds"
+        },
+        {
+            "url":"https://www.amazon.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "1 */30 * * * *",
+            "description": "Every 30 minutes at second 1"
+        },
+        {
+            "url":"https://www.facebook.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "30 25 */1 * * *",
+            "description": "Every hour at second 30 of minute"
+        },
+        {
+            "url":"https://www.apple.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "0 0 4 10-30 * 1,3,5",
+            "description": "At 04:00:00 on every day-of-month from 10 through 30 and on Monday, Wednesday, and Friday."
+        }
+    ]
+}

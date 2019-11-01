@@ -1,0 +1,16 @@
+{
+    "reports":{
+        "retentionDays": 3
+    },
+    "logs":{
+        "lightkeeper":{
+            "retentionDays": 7
+        },
+        "results":{
+            "retentionDays": 30
+        },
+        "errors": {
+            "retentionDays": 5
+        }
+    }
+}

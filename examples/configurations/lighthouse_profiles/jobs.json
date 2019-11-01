@@ -1,0 +1,9 @@
+{
+    "jobs": [
+        {
+            "url":"https://www.example.com",
+            "profiles":[ "desktop", "mobile", "mobile-desktopVersion"],
+            "cron": "*/45 * * * * *"
+        }
+    ]
+}

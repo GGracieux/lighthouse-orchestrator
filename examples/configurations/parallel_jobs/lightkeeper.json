@@ -1,0 +1,5 @@
+{
+    "jobsRunner": {
+        "maxParallelJobs": 4
+    }
+}

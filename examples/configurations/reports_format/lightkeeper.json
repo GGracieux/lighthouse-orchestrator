@@ -1,0 +1,5 @@
+{
+    "reports":{
+        "formats": ["html", "csv", "json"]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "extends": "lighthouse:default",
+    "settings": {
+        "maxWaitForFcp": 15000,
+        "maxWaitForLoad": 35000,
+        "skipAudits": [
+            "uses-http2"
+        ],
+        "emulatedFormFactor": "desktop"
+    },
+    "audits": [
+        "metrics/first-contentful-paint-3g"
+    ],
+    "categories": {
+        "performance": {
+            "auditRefs": [
+                {
+                    "id": "first-contentful-paint-3g",
+                    "weight": 0
+                }
+            ]
+        }
+    }
+}

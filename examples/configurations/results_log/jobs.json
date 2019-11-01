@@ -1,0 +1,28 @@
+{
+    "jobs": [
+        {
+            "url":"https://www.google.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "*/45 * * * * *",
+            "category": "search engine"
+        },
+        {
+            "url":"https://www.amazon.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "*/45 * * * * *",
+            "category": "e-commerce"
+        },
+        {
+            "url":"https://www.facebook.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "*/45 * * * * *",
+            "category": "social network"
+        },
+        {
+            "url":"https://www.apple.com",
+            "profiles":[ "mobile", "desktop"],
+            "cron": "*/45 * * * * *",
+            "category": "hardware"
+        }
+    ]
+}
