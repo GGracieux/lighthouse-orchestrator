@@ -27,7 +27,7 @@ npm install -g lighthouse-orchestrator
 ```
 Arguments : 
 - config-dir : Directory containing your config files. Default config files from this package are located under /conf. See below for configuration details.
-- data-dir : Directory for result storage, will be created if it does not exists. See below for results details.
+- data-dir : Directory for output storage, will be created if it does not exists. See below for output details.
 
 ### Launch with Docker
 
@@ -42,7 +42,7 @@ git clone git@github.com:GGracieux/lighthouse-orchestrator.git
 docker build -t lightkeeper .
 ```
 
-- Create a docker-compose.yml specifying config-dir and data-dir folders (see below for configuration and results details). For example :
+- Create a docker-compose.yml specifying config-dir and data-dir folders (see below for configuration and output details). For example :
 ```yml
 version: '3.2'
 services:
@@ -95,10 +95,25 @@ The config file below runs
 
 ### lightkeeper.json
 This file defines the general execution parameters of lighkeeper.
-- reports.format : defines lighthouse report format
-- logs : defines log reloated configuration
-  - logs.params : if set to true, job configuration is written when writting job result
-  - logs.fields : list of fields from lighthouse json report to writte as job resul
+
+#### reports
+- reports.formats: lighthouse generated reports format
+- reports.retention-days : number of days reports should be kept.
+
+#### logs
+- logs.lightkeeper.retention-days : number of days /log/lighthkeeper.log rotated file should be kept.
+- logs.results.fields : defines all the fields to output to /log/results.log
+  - run : run related fields : Values can be
+    - id : the job id
+    - url : tested url (as configured in jobs.json)
+    - profile : currently tested profile
+    - qdate : date of job enqueuing
+    - any custom field added in jobs.json
+  - lighthouse : list of fields from lighthouse json report
+- logs.results.retention-days : number of days /log/results.log rotated file should be kept.
+- logs.errors.retention-days : number of days files located under /error should be kept.
+
+#### webserver
 - webserver.enabled : enables/disables data publishing on webserver
 - webserver.port : defines webserver port
 - webserver.folders: list of data-dir subfolders to allow access to
@@ -112,32 +127,46 @@ Configuration example :
 ```json
 {
     "reports":{
-        "formats": ["html", "json", "csv"]
+        "formats": ["html", "json", "csv"],
+        "retention-days": 7
     },
+
     "logs":{
-        "params":true,
-        "fields":[
-            "categories.performance.score",
-            "audits.time-to-first-byte.numericValue",
-            "audits.speed-index.numericValue",
-            "audits.total-byte-weight.numericValue",
-            "audits.dom-size.numericValue"
-        ]
+        "lightkeeper":{
+            "retention-days": 7
+        },
+        "results":{
+            "fields":{
+                "run":[
+                    "id",
+                    "url",
+                    "profile",
+                    "qdate"
+                ],
+                "lighthouse":[
+                    "categories.performance.score",
+                    "audits.time-to-first-byte.numericValue",
+                    "audits.speed-index.numericValue",
+                    "audits.total-byte-weight.numericValue",
+                    "audits.dom-size.numericValue"
+                ]
+            },
+            "retention-days": 7
+        },
+        "errors": {
+            "retention": 7
+        }
     },
+
     "webserver":{
         "enabled": true,
         "port": 8086,
-        "folders": ["reports", "logs", "tmp"],
+        "folders": ["reports", "logs", "tmp", "errors"],
         "searchable": true,
         "users": {
             "alice": "123456",
             "bob": "abcdef"
         }
-    },
-    "retention":{
-        "logs": 7,
-        "reports": 7,
-        "errors": 7
     }
 }
 ```
@@ -149,7 +178,7 @@ You can add as many profile as you want based on [lighthouse configuration forma
 Lightkeeper comes with two example profiles, mobile and desktop, they are identical to [lr-desktop-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-desktop-config.js) and [lr-mobile-config.js](https://github.com/GoogleChrome/lighthouse/blob/master/lighthouse-core/config/lr-mobile-config.js)
 
 
-## Results
+## Output
 
 Every data produced by lightkeeper is stored under the data-dir passed as command argument.
 According to lightkeeper.json, the data-dir folder can be exposed through http.

@@ -1,17 +1,36 @@
 {
     "reports":{
-        "formats": ["html", "json", "csv"]
+        "formats": ["html", "json", "csv"],
+        "retention-days": 7
     },
+
     "logs":{
-        "params":true,
-        "fields":[
-            "categories.performance.score",
-            "audits.time-to-first-byte.numericValue",
-            "audits.speed-index.numericValue",
-            "audits.total-byte-weight.numericValue",
-            "audits.dom-size.numericValue"
-        ]
+        "lightkeeper":{
+            "retention-days": 7
+        },
+        "results":{
+            "fields":{
+                "run":[
+                    "id",
+                    "url",
+                    "profile",
+                    "qdate"
+                ],
+                "lighthouse":[
+                    "categories.performance.score",
+                    "audits.time-to-first-byte.numericValue",
+                    "audits.speed-index.numericValue",
+                    "audits.total-byte-weight.numericValue",
+                    "audits.dom-size.numericValue"
+                ]
+            },
+            "retention-days": 7
+        },
+        "errors": {
+            "retention": 7
+        }
     },
+
     "webserver":{
         "enabled": true,
         "port": 8086,
@@ -21,10 +40,5 @@
             "alice": "123456",
             "bob": "abcdef"
         }
-    },
-    "retention":{
-        "logs": 7,
-        "reports": 7,
-        "errors": 7
     }
 }

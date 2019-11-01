@@ -40,18 +40,18 @@ class QueueManager {
                     let jobId = ts.getTime() + '-' + rnd.toString().padStart(3, '0')
 
                     // compose run json
-                    let runStr = JSON.stringify({
-                        id: jobId,
-                        url: job.url,
-                        profile: profile,
-                        qdate: ts.toISOString()
-                    })
+                    let run = JSON.parse(JSON.stringify(job))
+                    delete run.profiles
+                    delete run.cron
+                    run.id = jobId
+                    run.profile = profile
+                    run.qdate = ts.toISOString()
 
                     // log
                     logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)
 
                     // writes job run file
-                    fs.writeFileSync(global.args.data_dir + '/tmp/' + jobId + '.run.json', runStr, 'utf8')
+                    fs.writeFileSync(global.args.data_dir + '/tmp/' + jobId + '.run.json', JSON.stringify(run), 'utf8')
 
                 })
 

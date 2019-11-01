@@ -24,10 +24,10 @@ class Runner {
 
         // log rotator
         let rotator = new Rotator()
-        rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.retention.logs)
-        rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.retention.logs)
-        rotator.setDirectoryRetention(global.args.data_dir + '/errors', '1 2 2 * * *', global.conf.retention.errors)
-        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.retention.reports)
+        rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.logs.lightkeeper["retention-days"])
+        rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.logs.results["retention-days"])
+        rotator.setDirectoryRetention(global.args.data_dir + '/errors', '1 2 2 * * *', global.conf.logs.errors["retention-days"])
+        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.reports["retention-days"])
 
         // webserver
         if (global.conf.webserver.enabled) {
@@ -83,15 +83,14 @@ class Runner {
         logger.info('Job ' + jobResult.jobConf.id + ' : Processing (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
 
         // result log
-        if (global.conf.logs.params || global.conf.logs.fields.length > 0) {
-            this.logResults(jobResult) 
+        if (global.conf.logs.results.fields.run.length + global.conf.logs.results.fields.lighthouse.length > 0) {
+            this.logResults(jobResult)
         }
 
         // saving reports
         if (global.conf.reports.formats.length > 0) {
             this.archiveReports(jobResult)
         }
-        
     }
 
     //--- Extract results from json reports and log to file ------------------------------
@@ -101,9 +100,19 @@ class Runner {
         let reportPath = global.args.data_dir + '/tmp/' + jobResult.jobConf.id + '.report'
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
-        // extracting data
-        let line = (global.conf.logs.params) ? jobResult.jobConf.id + ';' + jobResult.jobConf.url + ';' + jobResult.jobConf.profile + ';' + jobResult.jobConf.qdate : ''
-        global.conf.logs.fields.forEach(key => {
+        // init result
+        let line = ''
+
+        // adding lightkeeper fields
+        global.conf.logs.results.fields.run.forEach(key => {
+            if (jobResult.jobConf.hasOwnProperty(key)) {
+                line += jobResult.jobConf[key]
+            }
+            line += ';'
+        })
+
+        // extracting lighthouse data
+        global.conf.logs.results.fields.lighthouse.forEach(key => {
             let keyparts = key.split('.')
             let item = report
             try {
