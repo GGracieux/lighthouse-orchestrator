@@ -2,13 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const QueueManager = require('./QueueManager.js')
 const Lighthouse = require('./Lighthouse.js')
-const Webserver = require('./Webserver.js')
-const Rotator = require('./Rotator.js')
 const mkdirp = require('mkdirp');
 const slugify = require('slugify')
 const glob = require("glob")
 
-class Runner {
+class JobRunner {
 
     //--- Initialisation ------------------------------
     constructor() {
@@ -22,18 +20,6 @@ class Runner {
         // lighthouse
         this.lighthouse = new Lighthouse()
 
-        // log rotator
-        let rotator = new Rotator()
-        rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.logs.lightkeeper["retention-days"])
-        rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.logs.results["retention-days"])
-        rotator.setDirectoryRetention(global.args.data_dir + '/logs/errors', '1 2 2 * * *', global.conf.logs.errors["retention-days"])
-        rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.reports["retention-days"])
-
-        // webserver
-        if (global.conf.webserver.enabled) {
-            let webserver = new Webserver()
-            webserver.start(global.conf.webserver.port)
-        }
     }
 
     //--- Runs a lighthouse test ------------------------------
@@ -42,7 +28,7 @@ class Runner {
         let jobs = this.qm.getJobIdsToRun()
         if (jobs.length > 0) {
           
-            let jobConf = JSON.parse(fs.readFileSync(global.args.data_dir + '/tmp/'+ jobs[0] + '.run.json', 'utf8'));
+            let jobConf = JSON.parse(fs.readFileSync(global.args.data_dir + '/queue/'+ jobs[0] + '.run.json', 'utf8'));
 
             this.lighthouse.runJob(jobConf).then(
                 jobResult => {
@@ -97,7 +83,7 @@ class Runner {
     logResults(jobResult) {
     
         // reads report.json
-        let reportPath = global.args.data_dir + '/tmp/' + jobResult.jobConf.id + '.report'
+        let reportPath = global.args.data_dir + '/queue/' + jobResult.jobConf.id + '.report'
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // init result
@@ -147,7 +133,7 @@ class Runner {
         mkdirp.sync(archiveDir)
 
         // moving reports
-        let reportPath = global.args.data_dir + '/tmp/' + jobResult.jobConf.id + '.report'
+        let reportPath = global.args.data_dir + '/queue/' + jobResult.jobConf.id + '.report'
         global.conf["reports"]["formats"].forEach(format => {
             fs.renameSync(reportPath + '.' + format, archiveDir + jobResult.jobConf.id + '-' + jobResult.jobConf.profile + '-' + slugify(jobResult.jobConf.url).substring(0, 100) + '.' + format)
         });
@@ -162,8 +148,8 @@ class Runner {
     cleanMess(err) {
 
         // moves temporary files
-        let tmpdir = path.resolve(global.args.data_dir + '/tmp/' + err.jobConf.id)
-        let jobFiles = glob.sync(tmpdir+ '*')
+        let queueDir = path.resolve(global.args.data_dir + '/queue/' + err.jobConf.id)
+        let jobFiles = glob.sync(queueDir+ '*')
         jobFiles.forEach(jobFile => {
             fs.renameSync(jobFile, global.args.data_dir + '/logs/errors/' + path.basename(jobFile))
         })
@@ -174,4 +160,4 @@ class Runner {
 
 }
 
-module.exports = Runner
+module.exports = JobRunner

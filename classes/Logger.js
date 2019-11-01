@@ -1,5 +1,5 @@
 // Dependencies
-var fs = require('fs');
+const fs = require('fs');
 
 class Logger {
 
