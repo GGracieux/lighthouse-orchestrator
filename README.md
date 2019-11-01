@@ -131,7 +131,7 @@ Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json
 - webserver.https.enabled : enables/disables https
 - webserver.https.certificate.key: certificate key path, relative to config-dir
 - webserver.https.certificate.crt: certificate path, relative to config-dir
-- jobRunner.maxParallelJobs : max number of simultaneous lighthouse jobs
+- jobsRunner.maxParallelJobs : max number of simultaneous lighthouse jobs
 
 Configuration example :
 ```json
@@ -191,7 +191,7 @@ Configuration example :
         }
     },
 
-    "jobRunner": {
+    "jobsRunner": {
         "maxParallelJobs": 2
     }
 }

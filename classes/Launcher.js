@@ -4,7 +4,7 @@ const Webserver = require('./Webserver.js')
 const Rotator = require('./Rotator.js')
 const Logger = require('./Logger.js')
 const mkdirp = require('mkdirp');
-const JobRunner = require('./JobRunner.js')
+const JobsRunner = require('./JobsRunner.js')
 
 class Launcher
 {
@@ -22,7 +22,7 @@ class Launcher
         // Let's get to work
         this.startPurgeAuto()
         this.startWebServer()
-        this.startJobRunners()
+        this.startJobsRunner()
     }
 
     //--- Data directory structure creation ------------------------------
@@ -51,11 +51,11 @@ class Launcher
         }        
     }
 
-    //--- Starts JobRunner ------------------------------
-    startJobRunners() {
-        let jobRunner = new JobRunner()
-        for (let i = 0; i < global.conf.jobRunner.maxParallelJobs; i++) {
-            jobRunner.runQueue(i+1)
+    //--- Starts JobsRunner ------------------------------
+    startJobsRunner() {
+        let jobsRunner = new JobsRunner()
+        for (let i = 0; i < global.conf.jobsRunner.maxParallelJobs; i++) {
+            jobsRunner.runQueue(i+1)
         }
     }
 
