@@ -216,18 +216,18 @@ According to lightkeeper.json, the data-dir folder can be exposed through http.
 This is the application log, it monitors job activity.
 Log example
 ```log
-2019-10-29T21:18:01.244Z|info|No test in queue, waiting ..
-2019-10-29T21:19:01.244Z|info|No test in queue, waiting ...
-2019-10-29T21:20:01.010Z|info|Job 1572384001010-705 : Adding (mobile) https://www.google.com
-2019-10-29T21:20:01.010Z|info|Job 1572384001010-895 : Adding (desktop) https://www.google.com
-2019-10-29T21:20:23.251Z|info|Job 1572384001010-705 : Launching : (mobile) https://www.google.com
-2019-10-29T21:20:32.985Z|info|Job 1572384001010-705 : Processing (mobile) https://www.google.com
-2019-10-29T21:20:32.988Z|info|Job 1572384001010-705 : Ending (mobile) https://www.google.com
-2019-10-29T21:20:32.988Z|info|Job 1572384001010-895 : Launching : (desktop) https://www.google.com
-2019-10-29T21:20:42.853Z|info|Job 1572384001010-895 : Processing (desktop) https://www.google.com
-2019-10-29T21:20:42.855Z|info|Job 1572384001010-895 : Ending (desktop) https://www.google.com
-2019-10-29T21:20:42.856Z|info|No test in queue, waiting ...
-2019-10-29T21:21:42.856Z|info|No test in queue, waiting ...
+2019-10-29T21:18:01.244Z|info|Worker01, no test in queue, waiting ..
+2019-10-29T21:19:01.244Z|info|Worker01, no test in queue, waiting ...
+2019-10-29T21:20:01.010Z|info|QManager, Job 1572384001010-705 : Adding (mobile) https://www.google.com
+2019-10-29T21:20:01.010Z|info|QManager, Job 1572384001010-895 : Adding (desktop) https://www.google.com
+2019-10-29T21:20:23.251Z|info|Worker01, Job 1572384001010-705 : Launching : (mobile) https://www.google.com
+2019-10-29T21:20:32.985Z|info|Worker01, Job 1572384001010-705 : Processing (mobile) https://www.google.com
+2019-10-29T21:20:32.988Z|info|Worker01, Job 1572384001010-705 : Ending (mobile) https://www.google.com
+2019-10-29T21:20:32.988Z|info|Worker01, Job 1572384001010-895 : Launching : (desktop) https://www.google.com
+2019-10-29T21:20:42.853Z|info|Worker01, Job 1572384001010-895 : Processing (desktop) https://www.google.com
+2019-10-29T21:20:42.855Z|info|Worker01, Job 1572384001010-895 : Ending (desktop) https://www.google.com
+2019-10-29T21:20:42.856Z|info|Worker01, no test in queue, waiting ...
+2019-10-29T21:21:42.856Z|info|Worker01, no test in queue, waiting ...
 ```
 ### /logs/results.log
 This is the results log, it logs results according to lightkeeper.json configuration file
