@@ -53,7 +53,7 @@ class QueueManager {
                     logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)
 
                     // writes job run file
-                    fs.writeFileSync(global.args.data_dir + '/tmp/' + jobId + '.run.json', JSON.stringify(run), 'utf8')
+                    fs.writeFileSync(global.args.data_dir + '/queue/' + jobId + '.run.json', JSON.stringify(run), 'utf8')
 
                 })
 
@@ -72,8 +72,8 @@ class QueueManager {
     //--- Gets a list of job wainting to be run  ------------------------------
     getJobIdsToRun() {
 
-        // list all files in tmp
-        let files = fs.readdirSync(global.args.data_dir + '/tmp/')
+        // list all files in queue
+        let files = fs.readdirSync(global.args.data_dir + '/queue/')
 
         // split .runs and .report files
         var runs = []
@@ -111,15 +111,15 @@ class QueueManager {
 
     //--- Remove specific job from queue -------------------------------------
     removeJob(jobId) {
-        let runFilePath = global.args.data_dir + '/tmp/' + jobId + '.run.json'
+        let runFilePath = global.args.data_dir + '/queue/' + jobId + '.run.json'
         fs.unlinkSync(runFilePath)
     }
 
     //--- Remove everything from queue ------------------------------
     emptyQueue() {
-        let files = fs.readdirSync(global.args.data_dir + '/tmp/')
+        let files = fs.readdirSync(global.args.data_dir + '/queue/')
         for (const file of files) {
-            fs.unlinkSync(path.join(global.args.data_dir + '/tmp/', file))
+            fs.unlinkSync(path.join(global.args.data_dir + '/queue/', file))
         }
     }
 

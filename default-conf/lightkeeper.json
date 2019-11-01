@@ -35,7 +35,7 @@
         "enabled": true,
         "port": 8086,
         "content": {
-            "folders": ["reports", "logs", "tmp"],
+            "folders": ["reports", "logs", "queue"],
             "searchable": true
         },
         "authentication": {

@@ -11,7 +11,7 @@ global.conf = new Configuration().load()
 
 // Creates data directory structure
 const mkdirp = require('mkdirp');
-mkdirp.sync(global.args.data_dir + '/tmp')
+mkdirp.sync(global.args.data_dir + '/queue')
 mkdirp.sync(global.args.data_dir + '/logs')
 mkdirp.sync(global.args.data_dir + '/logs/errors')
 mkdirp.sync(global.args.data_dir + '/reports')

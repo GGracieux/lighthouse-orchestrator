@@ -10,7 +10,7 @@ class Lighthouse {
 
         // compose lighthouse command
         let cmd  = 'lighthouse ' + jobConf.url
-        cmd += ' --output-path ' + global.args.data_dir + '/tmp/' + jobConf.id
+        cmd += ' --output-path ' + global.args.data_dir + '/queue/' + jobConf.id
         cmd += ' --chrome-flags="--headless --no-sandbox --ignore-certificate-errors"'
         cmd += ' --config-path ' + new Configuration().getProfilePath(jobConf.profile)
 

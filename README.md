@@ -171,7 +171,7 @@ Configuration example :
         "enabled": true,
         "port": 8086,
         "content": {
-            "folders": ["reports", "logs", "tmp"],
+            "folders": ["reports", "logs", "queue"],
             "searchable": true
         },
         "authentication": {
@@ -247,5 +247,5 @@ ls -l reports/2019/10/29/
 1572384001010-895-desktop-https:www.google.com.json
 ```
 
-### /tmp
-This folder contains the job queue and lighthouse reports before they are moved to /data/reports
+### /queue
+This folder contains the job queue
