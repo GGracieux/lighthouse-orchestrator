@@ -55,6 +55,6 @@
     },
 
     "jobRunner": {
-        "maxParallelJobs": 2
+        "maxParallelJobs": 1
     }
 }
