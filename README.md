@@ -106,10 +106,10 @@ Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json
 
 #### reports
 - reports.formats: lighthouse generated reports format
-- reports.retention-days : number of days reports should be kept.
+- reports.retentionDays : number of days reports should be kept.
 
 #### logs
-- logs.lightkeeper.retention-days : number of days /logs/lighthkeeper.log rotated file should be kept.
+- logs.lightkeeper.retentionDays : number of days /logs/lighthkeeper.log rotated file should be kept.
 - logs.results.fields : defines all the fields to output to /logs/results.log
   - run : run related fields : Values can be
     - id : the job id
@@ -118,8 +118,8 @@ Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json
     - qdate : date of job enqueuing
     - any custom field added in jobs.json
   - lighthouse : list of fields from lighthouse json report
-- logs.results.retention-days : number of days /logs/results.log rotated file should be kept.
-- logs.errors.retention-days : number of days files located under /logs/errors should be kept.
+- logs.results.retentionDays : number of days /logs/results.log rotated file should be kept.
+- logs.errors.retentionDays : number of days files located under /logs/errors should be kept.
 
 #### webserver
 - webserver.enabled : enables/disables data publishing on webserver
@@ -137,12 +137,12 @@ Configuration example :
 {
     "reports":{
         "formats": ["html", "json", "csv"],
-        "retention-days": 7
+        "retentionDays": 7
     },
 
     "logs":{
         "lightkeeper":{
-            "retention-days": 7
+            "retentionDays": 7
         },
         "results":{
             "fields":{
@@ -160,10 +160,10 @@ Configuration example :
                     "audits.dom-size.numericValue"
                 ]
             },
-            "retention-days": 7
+            "retentionDays": 7
         },
         "errors": {
-            "retention": 7
+            "retentionDays": 7
         }
     },
 

@@ -1,12 +1,12 @@
 {
     "reports":{
         "formats": ["html", "json", "csv"],
-        "retention-days": 7
+        "retentionDays": 7
     },
 
     "logs":{
         "lightkeeper":{
-            "retention-days": 7
+            "retentionDays": 7
         },
         "results":{
             "fields":{
@@ -24,10 +24,10 @@
                     "audits.dom-size.numericValue"
                 ]
             },
-            "retention-days": 7
+            "retentionDays": 7
         },
         "errors": {
-            "retention": 7
+            "retentionDays": 7
         }
     },
 
