@@ -32,7 +32,7 @@
     },
 
     "webserver":{
-        "enabled": true,
+        "enabled": false,
         "port": 8086,
         "content": {
             "folders": ["reports", "logs", "queue"],
