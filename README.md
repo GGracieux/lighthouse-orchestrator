@@ -74,7 +74,7 @@ services:
       - 8086:80
 ```
 
-#### Execution
+#### Run
     
 - Launch 
 ```bash
