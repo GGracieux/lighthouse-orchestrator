@@ -26,10 +26,10 @@ npm install -g lighthouse-orchestrator
     
 ```bash
 # generate default configuration
-./lightkeeper --init-config
+lightkeeper --init-config
 
 # run it
-./lightkeeper
+lightkeeper
 ```
 
 Available arguments :
