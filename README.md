@@ -82,7 +82,8 @@ docker-compose up
 
 ## Configuration
 
-All configuration files must be located under the config-dir passed as command argument.  
+All configuration files must be located under the config-dir passed as command argument.
+Example configurations are available under /examples/configurations.
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -268,7 +269,7 @@ This folder contains the job queue
 
 ## Version history
 
-#### version 1.3.2
+#### version 1.3.3
 - Added --init-config and --init-profiles to CLI arguments.
 - Default configuration adjustments.
 - Removed a supernumarary empty field in results.log.
