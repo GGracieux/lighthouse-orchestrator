@@ -52,5 +52,9 @@
                 "crt":"your-certificate.crt"
             }
         }
+    },
+
+    "jobRunner": {
+        "maxParallelJobs": 2
     }
 }

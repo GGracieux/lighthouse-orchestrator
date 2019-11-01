@@ -23,50 +23,50 @@ class JobRunner {
     }
 
     //--- Runs a lighthouse test ------------------------------
-    runQueue() {
+    runQueue(workerId) {
 
-        let jobs = this.qm.getJobIdsToRun()
-        if (jobs.length > 0) {
-          
-            let jobConf = JSON.parse(fs.readFileSync(global.args.data_dir + '/queue/'+ jobs[0] + '.run.json', 'utf8'));
+        let that = this
+        this.qm.prepareNextJobForRun(workerId, function(jobConf) {
 
-            this.lighthouse.runJob(jobConf).then(
-                jobResult => {
+            if (jobConf !== null ) {
+
+                logger.info(logger.getJobStatusChangeMessage(jobConf, 'Launching'))
+                that.lighthouse.runJob(jobConf).then(
+                    jobResult => {
+
+                        // process job result
+                        that.processJobResult(jobResult)
+                        logger.info(logger.getJobStatusChangeMessage(jobResult.jobConf, 'Ending'))
     
-                    // process job result
-                    this.processJobResult(jobResult)
+                        // remove ran job from queue and launch next
+                        that.qm.removeRunningJob(jobResult.jobConf.id)
+                        that.runQueue(workerId)
 
-                    // remove job from queue
-                    logger.info('Job ' + jobResult.jobConf.id  + ' : Ending (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
-                    this.qm.removeJob(jobResult.jobConf.id)
+                    },
+                    err => {
     
-                    // launch next job
-                    this.runQueue()
-                
-                },
-                err => {
+                        // log errors and clean the mess
+                        logger.error(logger.getJobStatusChangeMessage(jobResult.jobConf, 'Error', ' - see /logs/errors folder'))
+                        that.archiveErrorFiles(err)
 
-                    // log error
-                    logger.error('Job ' + err.jobConf.id  + ' : Error (' + err.jobConf.profile + ') ' + err.jobConf.url + ' - see /logs/errors folder')
+                        // launch next job
+                        that.runQueue(workerId)
+                    }
+                )
+            } else {
+                logger.info('Worker' + String(workerId).padStart(2,'0') + ', no test in queue, waiting ...')
+                setTimeout(function(){ that.runQueue(workerId)}.bind(that), 60000);
+            }
 
-                    // clean error
-                    this.cleanMess(err)
+        })
 
-                    // launch next job
-                    this.runQueue()
-                }
-            )
-        } else {
-            logger.info('No test in queue, waiting ...')
-            setTimeout(this.runQueue.bind(this), 60000);
-        }
     }
 
     //--- Process lighthouse job results ------------------------------
     processJobResult(jobResult) {
 
         // action log
-        logger.info('Job ' + jobResult.jobConf.id + ' : Processing (' + jobResult.jobConf.profile + ') ' + jobResult.jobConf.url)
+        logger.info(logger.getJobStatusChangeMessage(jobResult.jobConf, 'Processing'))
 
         // result log
         if (global.conf.logs.results.fields.run.length + global.conf.logs.results.fields.lighthouse.length > 0) {
@@ -144,8 +144,8 @@ class JobRunner {
         }
     }
 
-    //--- Clean failed test------------------------------
-    cleanMess(err) {
+    //--- Archive temporary files to lo------------------------------
+    archiveErrorFiles(err) {
 
         // moves temporary files
         let queueDir = path.resolve(global.args.data_dir + '/queue/' + err.jobConf.id)

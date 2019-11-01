@@ -6,7 +6,6 @@ class Lighthouse {
 
     //--- Executes a lightHouse job ------------------------------
     runJob(jobConf) {
-        logger.info('Job '  + jobConf.id + ' : Launching : (' + jobConf.profile + ') ' + jobConf.url)
 
         // compose lighthouse command
         let cmd  = 'lighthouse ' + jobConf.url

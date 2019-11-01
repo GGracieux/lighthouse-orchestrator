@@ -50,6 +50,13 @@ class Logger {
         this.write('error', message)
     }
 
+    //--- Compose message for job status change --------+
+    getJobStatusChangeMessage(jobConf, status, additionalText = '') {
+        let msg = jobConf.hasOwnProperty('workerId') ? 'Worker' + String(jobConf.workerId).padStart(2,'0') : 'QManager'
+        msg += ', Job '  + jobConf.id + ' : ' + status + ' : (' + jobConf.profile + ') ' + jobConf.url + additionalText
+        return msg
+    }
+
 }
 
 module.exports = Logger

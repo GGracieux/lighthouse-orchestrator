@@ -41,19 +41,19 @@ class QueueManager {
                     let rnd = Math.floor(Math.random() * Math.floor(999))
                     let jobId = ts.getTime() + '-' + rnd.toString().padStart(3, '0')
 
-                    // compose run json
-                    let run = JSON.parse(JSON.stringify(job))
-                    delete run.profiles
-                    delete run.cron
-                    run.id = jobId
-                    run.profile = profile
-                    run.qdate = ts.toISOString()
+                    // compose jobConf json
+                    let jobConf = JSON.parse(JSON.stringify(job))
+                    delete jobConf.profiles
+                    delete jobConf.cron
+                    jobConf.id = jobId
+                    jobConf.profile = profile
+                    jobConf.qdate = ts.toISOString()
 
                     // log
-                    logger.info('Job '  + jobId + ' : Adding (' + profile + ') ' + job.url)
+                    logger.info(logger.getJobStatusChangeMessage(jobConf, 'Adding'))
 
-                    // writes job run file
-                    fs.writeFileSync(global.args.data_dir + '/queue/' + jobId + '.run.json', JSON.stringify(run), 'utf8')
+                    // writes job waiting file
+                    fs.writeFileSync(global.args.data_dir + '/queue/' + jobId + '.waiting.json', JSON.stringify(jobConf), 'utf8')
 
                 })
 
@@ -69,50 +69,61 @@ class QueueManager {
         this.cronjobs = []
     }
 
+    //--- Prepares next job for run ------------------------------
+    prepareNextJobForRun(workerId, callBack) {
+
+        let that = this
+
+        // takes semaphore for job choice
+        global.jobChoice.take(function() {
+
+            // gets next jobs id list
+            let jobs = that.getWaitingJobsIds()
+            if (jobs.length == 0) {
+                global.jobChoice.leave()
+                callBack(null)
+                return
+            }
+
+            // loads next job configuration
+            let jobRootPath = global.args.data_dir + '/queue/'+ jobs[0]
+            let jobConf = JSON.parse(fs.readFileSync(jobRootPath + '.waiting.json', 'utf8'));
+            jobConf.workerId = workerId
+
+            // Change job to running state
+            fs.renameSync(jobRootPath + '.waiting.json', jobRootPath + '.running.json')
+
+            // leaves semaphore and chain callback
+            global.jobChoice.leave()
+            callBack(jobConf)
+        })
+
+    }
+
     //--- Gets a list of job wainting to be run  ------------------------------
-    getJobIdsToRun() {
+    getWaitingJobsIds() {
 
         // list all files in queue
         let files = fs.readdirSync(global.args.data_dir + '/queue/')
 
-        // split .runs and .report files
-        var runs = []
-        var reports = []
+        // filter .waiting jobs
+        var waiting = []
         files.forEach(function (file) {
             let fparts = file.split('.')
-            switch (fparts[1]) {
-                case 'run':
-                    runs.push(fparts[0])
-                    break;
-                case 'report':
-                    reports.push(fparts[0])
-                    break;
+            if (fparts[1] == 'waiting') {
+                waiting.push(fparts[0])
             }
         });
-
-        // deduplicate
-        runs = runs.filter(function(elem, pos) {
-            return runs.indexOf(elem) == pos;
-        })
-        reports = reports.filter(function(elem, pos) {
-            return reports.indexOf(elem) == pos;
-        })
-
-        // removing runs already having reports
-        reports.forEach(function (jobid) {
-            let index = runs.indexOf(jobid);
-            if (index > -1) {
-                runs.splice(index, 1);
-            }
-        })  
         
-        return runs
+        return waiting
     }
 
     //--- Remove specific job from queue -------------------------------------
-    removeJob(jobId) {
+    removeRunningJob(jobId) {
         let runFilePath = global.args.data_dir + '/queue/' + jobId + '.run.json'
-        fs.unlinkSync(runFilePath)
+        if (fs.existsSync(runFilePath)) {
+            fs.unlinkSync(runFilePath)
+        }
     }
 
     //--- Remove everything from queue ------------------------------

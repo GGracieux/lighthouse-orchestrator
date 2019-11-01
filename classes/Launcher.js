@@ -16,12 +16,13 @@ class Launcher
         global.args = new ArgumentParser().parseArgs()
         global.conf = new Configuration().load()
         global.logger = new Logger(global.args.data_dir + '/logs/lightkeeper.log', true)
+        global.jobChoice = require('semaphore')(1);
         this.initDataDirectory()
         
         // Let's get to work
         this.startPurgeAuto()
         this.startWebServer()
-        this.startJobRunner()
+        this.startJobRunners()
     }
 
     //--- Data directory structure creation ------------------------------
@@ -35,10 +36,10 @@ class Launcher
     //--- Starts Purge auto and file rotation ------------------------------
     startPurgeAuto() {
          let rotator = new Rotator()
-         rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.logs.lightkeeper["retention-days"])
-         rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.logs.results["retention-days"])
-         rotator.setDirectoryRetention(global.args.data_dir + '/logs/errors', '1 2 2 * * *', global.conf.logs.errors["retention-days"])
-         rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.reports["retention-days"])
+         rotator.setFileRotation(global.args.data_dir + '/logs/lightkeeper.log', '1 1 2 * * *', global.conf.logs.lightkeeper.retentionDays)
+         rotator.setFileRotation(global.args.data_dir + '/logs/results.log', '1 1 2 * * *', global.conf.logs.results.retentionDays)
+         rotator.setDirectoryRetention(global.args.data_dir + '/logs/errors', '1 2 2 * * *', global.conf.logs.errors.retentionDays)
+         rotator.setTimeTreeRetention(global.args.data_dir + '/reports', '1 2 2 * * *', global.conf.reports.retentionDays)
         
     }
 
@@ -51,9 +52,11 @@ class Launcher
     }
 
     //--- Starts JobRunner ------------------------------
-    startJobRunner() {
+    startJobRunners() {
         let jobRunner = new JobRunner()
-        jobRunner.runQueue()
+        for (let i = 0; i < global.conf.jobRunner.maxParallelJobs; i++) {
+            jobRunner.runQueue(i+1)
+        }
     }
 
 }
