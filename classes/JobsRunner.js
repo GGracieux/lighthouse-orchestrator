@@ -87,14 +87,15 @@ class JobsRunner {
         let report = JSON.parse(fs.readFileSync(reportPath + '.json', 'utf8'));
 
         // init result
-        let line = ''
+        let line = []
 
         // adding lightkeeper fields
         global.conf.logs.results.fields.run.forEach(key => {
             if (jobResult.jobConf.hasOwnProperty(key)) {
-                line += jobResult.jobConf[key]
+                line.push(jobResult.jobConf[key])
+            } else {
+                line.push('')
             }
-            line += ';'
         })
 
         // extracting lighthouse data
@@ -112,11 +113,11 @@ class JobsRunner {
             } catch(e) {
                 item = ''
             }
-            line += ";" + item
+            line.push(item)
         })
 
         // writing result to log
-        fs.appendFile(global.args.data_dir + '/logs/results.log', line+"\n", function(err) {
+        fs.appendFile(global.args.data_dir + '/logs/results.log', line.join(';') +"\n", function(err) {
             if(err) {
                 return console.log(err);
             }
