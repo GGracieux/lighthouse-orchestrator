@@ -34,11 +34,23 @@
     "webserver":{
         "enabled": true,
         "port": 8086,
-        "folders": ["reports", "logs", "tmp", "errors"],
-        "searchable": true,
-        "users": {
-            "alice": "123456",
-            "bob": "abcdef"
+        "content": {
+            "folders": ["reports", "logs", "tmp", "errors"],
+            "searchable": true
+        },
+        "authentication": {
+            "enabled": true,
+            "users": {
+                "alice": "123456",
+                "bob": "abcdef"
+            }
+        },
+        "https":{
+            "enabled": false,
+            "certificate": {
+                "key":"your-certificate.key",
+                "crt":"your-certificate.crt"
+            }
         }
     }
 }

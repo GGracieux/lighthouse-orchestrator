@@ -3,6 +3,8 @@ var basicAuth = require('express-basic-auth')
 var serveIndex = require('serve-index');
 var glob = require('glob')
 var path = require('path')
+var https = require('https');
+var fs = require('fs')
 
 class Webserver {
 
@@ -12,17 +14,17 @@ class Webserver {
         this.app = express()
 
         // adds basic auth
-        if (global.conf.webserver.hasOwnProperty('users')) {
+        if (global.conf.webserver.authentication.enabled) {
             this.addBasicAuth()
         }
 
         // adds static directories
-        global.conf.webserver.folders.forEach( folder => {
+        global.conf.webserver.content.folders.forEach( folder => {
             this.addStaticDirectory('/' + folder, global.args.data_dir + '/' + folder )
         })
 
         // adds search
-        if (global.conf.webserver.searchable) {
+        if (global.conf.webserver.content.searchable) {
             this.addSearchById()
         }
 
@@ -34,7 +36,7 @@ class Webserver {
     //--- Adds basic auth to webserver access
     addBasicAuth() {
         this.app.use(basicAuth({
-            users: global.conf.webserver.users,
+            users: global.conf.webserver.authentication.users,
             challenge: true
         }))
     }
@@ -75,7 +77,7 @@ class Webserver {
     //--- Adds homepage
     addHomePage() {
         this.app.use(serveIndex(global.args.data_dir, {
-            filter: function(filename) { return global.conf.webserver.folders.includes(filename) },
+            filter: function(filename) { return global.conf.webserver.content.folders.includes(filename) },
             icons: true,
             view: "details"
         }));
@@ -83,7 +85,14 @@ class Webserver {
 
     //--- Starts webserver on specific port and directory ------------------------------
     start(port) {
-        this.app.listen(port);
+        if (global.conf.webserver.https.enabled) {
+            https.createServer({
+                key: fs.readFileSync( global.args.config_dir + '/' + global.conf.webserver.https.certificate.key ),
+                cert: fs.readFileSync( global.args.config_dir + '/' + global.conf.webserver.https.certificate.crt )
+            }, this.app).listen(port);
+        } else {
+            this.app.listen(port);
+        }
     }
 
 }
