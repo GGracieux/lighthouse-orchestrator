@@ -254,3 +254,33 @@ ls -l reports/2019/10/29/
 
 ### /queue
 This folder contains the job queue
+
+
+## Version history
+
+#### version 1.3.1 
+- Added this version history
+
+#### version 1.3.0
+- Configuration rework, default configuration included and overloads mechanics
+- Added https support to webserver
+- Added parallel job running option
+
+#### version 1.2.3
+- Ignore certificate error to allow testing against unsafe ssl certificates
+
+#### version 1.2.2
+- Added basic auth option to webserver
+
+#### version 1.2.1
+- Fixed build and installation
+
+#### version 1.2.0
+- Added configuration options to webserver
+- Enhanced error trace and retention
+
+#### version 1.1.1
+- Global installation now available
+
+#### version 1.1.0
+- First version taged & published
