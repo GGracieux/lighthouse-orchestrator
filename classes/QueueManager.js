@@ -1,7 +1,7 @@
 // Dependencies
 const fs = require('fs');
 const path = require('path');
-var CronJob = require('cron').CronJob;
+const CronJob = require('cron').CronJob;
 const Configuration = require('./Configuration.js')
 
 class QueueManager {

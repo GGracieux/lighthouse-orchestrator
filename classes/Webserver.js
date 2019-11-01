@@ -1,10 +1,10 @@
-var express = require('express')
-var basicAuth = require('express-basic-auth')
-var serveIndex = require('serve-index');
-var glob = require('glob')
-var path = require('path')
-var https = require('https');
-var fs = require('fs')
+const express = require('express')
+const basicAuth = require('express-basic-auth')
+const serveIndex = require('serve-index');
+const glob = require('glob')
+const path = require('path')
+const https = require('https');
+const fs = require('fs')
 
 class Webserver {
 
