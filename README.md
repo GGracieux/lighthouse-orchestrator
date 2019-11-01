@@ -268,29 +268,35 @@ This folder contains the job queue
 
 ## Version history
 
+#### version 1.3.2
+- Added --init-config and --init-profiles to CLI arguments.
+- Default configuration adjustments.
+- Removed a supernumarary empty field in results.log.
+- Added a set of configuration example.
+
 #### version 1.3.1 
-- Added this version history
+- Added this version history.
 
 #### version 1.3.0
-- Configuration rework, default configuration included and overloads mechanics
-- Added https support to webserver
-- Added parallel job running option
+- Configuration rework, default configuration included and overloads mechanics.
+- Added https support to webserver.
+- Added parallel job running option.
 
 #### version 1.2.3
-- Ignore certificate error to allow testing against unsafe ssl certificates
+- Ignore certificate error to allow testing against unsafe ssl certificates.
 
 #### version 1.2.2
-- Added basic auth option to webserver
+- Added basic auth option to webserver.
 
 #### version 1.2.1
-- Fixed build and installation
+- Fixed build and installation.
 
 #### version 1.2.0
-- Added configuration options to webserver
-- Enhanced error trace and retention
+- Added configuration options to webserver.
+- Enhanced error trace and retention.
 
 #### version 1.1.1
-- Global installation now available
+- Global installation now available.
 
 #### version 1.1.0
-- First version taged & published
+- First version taged & published.
