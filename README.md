@@ -76,7 +76,6 @@ services:
 
 #### Run
     
-- Launch 
 ```bash
 docker-compose up
 ```
