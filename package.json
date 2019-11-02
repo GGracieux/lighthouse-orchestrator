@@ -8,13 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GGracieux/lighthouse-keeper.git"
+    "url": "https://github.com/GGracieux/lighthouse-orchestrator.git"
   },
   "bin": {
     "lightkeeper": "./lightkeeper"
   },
   "author": "ggracieux@gmail.com",
   "license": "ISC",
+  "keywords": [
+    "lighthouse",
+    "performance",
+    "monitoring"
+  ],
   "dependencies": {
     "argparse": "^1.0.10",
     "cron": "^1.7.2",
