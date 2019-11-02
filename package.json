@@ -18,8 +18,7 @@
   "keywords": [
     "lighthouse",
     "lightkeeper",
-    "performance",
-    "monitoring"
+    "performance-monitoring"
   ],
   "dependencies": {
     "argparse": "^1.0.10",
