@@ -305,6 +305,10 @@ This folder contains the job queue
 
 ## Version history
 
+#### version 1.3.4
+- Added cofigurable field separator for results.log
+- Readme and documentation efforts
+
 #### version 1.3.3
 - Added --init-config and --init-profiles to CLI arguments.
 - Default configuration adjustments.
