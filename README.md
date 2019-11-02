@@ -6,6 +6,27 @@ Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 - Extracts results data from reports and stores selected values to results.log
 - Embeded webserver allows to access reports and logs (https and basic-auth )
 
+## Table of contents
+
+- [How to use it ?](#how-to-use-it-)
+  - [Run with CLI](#run-with-cli)
+  - [Run with Docker ](#run-with-docker)
+ 
+- [Configuration](#configuration)
+  - [jobs.json](#jobsjson)
+  - [lightkeeper.json](#lightkeeperjson)
+  - [profile.xxxxx.json](#profilexxxxxjson)
+
+- [Outputs](#outputs)
+  - [/logs/lightkeeper.log](#logslightkeeperlog)
+  - [/logs/results.log](#logsresultslog)
+  - [/logs/errors/](#logserrors)
+  - [/reports](#reports-1)
+  - [/queue](#queue)
+ 
+ - [Version history](#version-history)
+
+
 ## How to use it ?
 
 ### Run with CLI
@@ -84,16 +105,16 @@ docker-compose up
 
 All configuration files must be located under the config-dir passed as command argument.
 A set of example configurations are available under /examples : 
-01 - Use default configuration
-02 - Set job frequency
-03 - Set reports format
-04 - Set data retention
-05 - Configure results.log
-06 - Run parallel jobs
-07 - Custom lighthouse profiles
-08 - Webserver public
-09 - Webserver secure
-10 - Full configuration
+- [01 - Use default configuration](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/01%20-%20Use%20default%20configuration)
+- [02 - Set job frequency](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/02%20-%20Set%20job%20frequency)
+- [03 - Set reports format](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/03%20-%20Set%20reports%20format)
+- [04 - Set data retention](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/04%20-%20Set%20data%20retention)
+- [05 - Configure results.log](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/05%20-%20Configure%20results.log)
+- [06 - Run parallel jobs](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/06%20-%20Run%20parallel%20jobs)
+- [07 - Custom lighthouse profiles](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/07%20-%20Custom%20lighthouse%20profiles)
+- [08 - Webserver public](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/08%20-%20Webserver%20public)
+- [09 - Webserver secure](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/09%20-%20Webserver%20secure)
+- [10 - Full configuration](https://github.com/GGracieux/lighthouse-orchestrator/tree/master/examples/10%20-%20Full%20configuration)
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -124,6 +145,71 @@ For example the following jobs.json file runs :
 ### lightkeeper.json
 This file defines the general execution parameters of lighkeeper.
 Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json) and then overloads it with your custom lightkeeper.json file located under config-dir folder.
+
+The following lightkeeper.json file is the default configuration :
+```json
+{
+    "reports":{
+        "formats": ["html"],
+        "retentionDays": 7
+    },
+
+    "logs":{
+        "lightkeeper":{
+            "retentionDays": 7
+        },
+        "results":{
+            "fields":{
+                "run":[
+                    "id",
+                    "url",
+                    "profile",
+                    "qdate"
+                ],
+                "lighthouse":[
+                    "categories.performance.score",
+                    "audits.time-to-first-byte.numericValue",
+                    "audits.speed-index.numericValue",
+                    "audits.total-byte-weight.numericValue",
+                    "audits.dom-size.numericValue"
+                ]
+            },
+            "fieldSeparator": ";",
+            "retentionDays": 7
+        },
+        "errors": {
+            "retentionDays": 7
+        }
+    },
+
+    "webserver":{
+        "enabled": false,
+        "port": 8086,
+        "content": {
+            "folders": ["reports", "logs", "queue"],
+            "searchable": true
+        },
+        "authentication": {
+            "enabled": false,
+            "users": {
+                "alice": "123456",
+                "bob": "abcdef"
+            }
+        },
+        "https":{
+            "enabled": false,
+            "certificate": {
+                "key":"your-certificate.key",
+                "crt":"your-certificate.crt"
+            }
+        }
+    },
+
+    "jobsRunner": {
+        "maxParallelJobs": 1
+    }
+}
+```
 
 #### reports
 - reports.formats: lighthouse generated reports format, 
@@ -168,7 +254,7 @@ You can add new profiles by writing profile.xxxx.json files under config-dir.
 You can overwrite default mobile and desktop files by writing profile.mobile.json and profile.desktop.json under config-dir.
 
 
-## Output
+## Outputs
 
 Every data produced by lightkeeper is stored under the data-dir passed as command argument.
 According to lightkeeper.json, the data-dir folder can be exposed through http.
