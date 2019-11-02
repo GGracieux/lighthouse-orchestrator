@@ -1,4 +1,4 @@
-# Lightkeeper - Lighthouse orchestrator
+<img src="https://raw.githubusercontent.com/GGracieux/lighthouse-orchestrator/master/.README/lightkeeper-header.png">
 
 Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
 - Generates lighthouse audits against a list of url with selected profile (mobile or desktop) at specified frequency.
