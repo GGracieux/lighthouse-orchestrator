@@ -11,3 +11,5 @@ In order to test, cd into this directory and type "lightkeeper"
  - category : as in jobs.json custom field category
  - first-byte : value extracted from lighthouse audit report
  - speed-index : value extracted from lighthouse audit report
+
+- lightkeeper.json also defines that results.log field separator should be "|" insead of default ";"

@@ -117,7 +117,7 @@ class JobsRunner {
         })
 
         // writing result to log
-        fs.appendFile(global.args.data_dir + '/logs/results.log', line.join(';') +"\n", function(err) {
+        fs.appendFile(global.args.data_dir + '/logs/results.log', line.join(global.conf.logs.results.fieldSeparator) +"\n", function(err) {
             if(err) {
                 return console.log(err);
             }

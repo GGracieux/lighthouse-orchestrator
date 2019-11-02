@@ -83,7 +83,17 @@ docker-compose up
 ## Configuration
 
 All configuration files must be located under the config-dir passed as command argument.
-Example configurations are available under /examples/configurations.
+A set of example configurations are available under /examples : 
+01 - Use default configuration
+02 - Set job frequency
+03 - Set reports format
+04 - Set data retention
+05 - Configure results.log
+06 - Run parallel jobs
+07 - Custom lighthouse profiles
+08 - Webserver public
+09 - Webserver secure
+10 - Full configuration
 
 ### jobs.json
 This file defines the jobs to run with lighthouse. Each job must specify the following properties : 
@@ -116,7 +126,7 @@ This file defines the general execution parameters of lighkeeper.
 Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json) and then overloads it with your custom lightkeeper.json file located under config-dir folder.
 
 #### reports
-- reports.formats: lighthouse generated reports format
+- reports.formats: lighthouse generated reports format, 
 - reports.retentionDays : number of days reports should be kept.
 
 #### logs
@@ -142,71 +152,11 @@ Lightkeeper loads it's default configuration (see /default-conf/lightkeeper.json
 - webserver.https.enabled : enables/disables https
 - webserver.https.certificate.key: certificate key path, relative to config-dir
 - webserver.https.certificate.crt: certificate path, relative to config-dir
+
+#### jobsRunner
 - jobsRunner.maxParallelJobs : max number of simultaneous lighthouse jobs
 
-Configuration example :
-```json
-{
-    "reports":{
-        "formats": ["html", "json", "csv"],
-        "retentionDays": 7
-    },
 
-    "logs":{
-        "lightkeeper":{
-            "retentionDays": 7
-        },
-        "results":{
-            "fields":{
-                "run":[
-                    "id",
-                    "url",
-                    "profile",
-                    "qdate"
-                ],
-                "lighthouse":[
-                    "categories.performance.score",
-                    "audits.time-to-first-byte.numericValue",
-                    "audits.speed-index.numericValue",
-                    "audits.total-byte-weight.numericValue",
-                    "audits.dom-size.numericValue"
-                ]
-            },
-            "retentionDays": 7
-        },
-        "errors": {
-            "retentionDays": 7
-        }
-    },
-
-    "webserver":{
-        "enabled": true,
-        "port": 8086,
-        "content": {
-            "folders": ["reports", "logs", "queue"],
-            "searchable": true
-        },
-        "authentication": {
-            "enabled": true,
-            "users": {
-                "alice": "123456",
-                "bob": "abcdef"
-            }
-        },
-        "https":{
-            "enabled": false,
-            "certificate": {
-                "key":"your-certificate.key",
-                "crt":"your-certificate.crt"
-            }
-        }
-    },
-
-    "jobsRunner": {
-        "maxParallelJobs": 2
-    }
-}
-```
 ### profile.xxxxx.json
 The profile.xxxxx.json files are lighthouse configuration files. The xxxxx filename part defines the profile name which you can use in jobs.json.
 
