@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/GGracieux/lighthouse-orchestrator/master/.README/lightkeeper-header.png">
 
 Lightkeeper is a simple lighthouse job orchestrator made with nodejs.
-- Generates lighthouse audits against a list of url with selected profile (mobile or desktop) at specified frequency.
+- Launches lighthouse audits against a list of url for selected profiles at specified frequency.
 - Stores generated reports until specified retention period limit
 - Extracts results data from reports and stores selected values to results.log
 - Embeded webserver allows to access reports and logs (https and basic-auth )
@@ -304,6 +304,10 @@ This folder contains the job queue
 
 
 ## Version history
+
+#### version 1.3.6
+- Changed logo
+- Added favicon
 
 #### version 1.3.4
 - Added cofigurable field separator for results.log
