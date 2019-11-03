@@ -1,5 +1,6 @@
 const express = require('express')
 const basicAuth = require('express-basic-auth')
+const favicon = require('serve-favicon');
 const serveIndex = require('serve-index');
 const glob = require('glob')
 const path = require('path')
@@ -85,6 +86,9 @@ class Webserver {
 
     //--- Starts webserver on specific port and directory ------------------------------
     start(port) {
+
+        this.app.use(favicon(__dirname + '/../assets/lightkeeper.ico'));
+
         if (global.conf.webserver.https.enabled) {
             https.createServer({
                 key: fs.readFileSync( global.args.config_dir + '/' + global.conf.webserver.https.certificate.key ),
