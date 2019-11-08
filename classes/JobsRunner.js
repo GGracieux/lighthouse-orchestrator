@@ -46,7 +46,7 @@ class JobsRunner {
                     err => {
     
                         // log errors and clean the mess
-                        logger.error(logger.getJobStatusChangeMessage(jobResult.jobConf, 'Error', ' - see /logs/errors folder'))
+                        logger.error(logger.getJobStatusChangeMessage(err.jobConf, 'Error', ' - see /logs/errors folder'))
                         that.archiveErrorFiles(err)
 
                         // launch next job
