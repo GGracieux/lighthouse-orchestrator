@@ -305,6 +305,9 @@ This folder contains the job queue
 
 ## Version history
 
+#### version 1.3.7
+- Bugfix : Error on error logging
+
 #### version 1.3.6
 - Changed logo
 - Added favicon
