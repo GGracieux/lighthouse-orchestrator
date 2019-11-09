@@ -120,7 +120,7 @@ class QueueManager {
 
     //--- Remove specific job from queue -------------------------------------
     removeRunningJob(jobId) {
-        let runFilePath = global.args.data_dir + '/queue/' + jobId + '.run.json'
+        let runFilePath = global.args.data_dir + '/queue/' + jobId + '.running.json'
         if (fs.existsSync(runFilePath)) {
             fs.unlinkSync(runFilePath)
         }
