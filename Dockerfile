@@ -7,6 +7,7 @@ FROM debian:buster
         apt-transport-https \
         ca-certificates \
         curl \
+        dumb-init \
         gnupg \
         nano
 
@@ -58,4 +59,4 @@ FROM debian:buster
     WORKDIR /lightkeeper
 
     # default command
-    CMD lightkeeper
+    CMD ["dumb-init", "lightkeeper"]

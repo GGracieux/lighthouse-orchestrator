@@ -305,6 +305,9 @@ This folder contains the job queue
 
 ## Version history
 
+#### version 1.3.10
+- Bugfix : No more chrome defunct process
+
 #### version 1.3.9
 - Bugfix : Correct cleaning of .running.json files
 
